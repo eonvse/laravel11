@@ -10,6 +10,7 @@
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^3.4",
         "livewire/volt": "^1.0",
+        "opcodesio/log-viewer": "^3.6",
         "spatie/laravel-permission": "^6.4"
     },
     "require-dev": {

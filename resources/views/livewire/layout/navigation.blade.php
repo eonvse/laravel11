@@ -54,6 +54,14 @@ $logout = function (Logout $logout) {
                                         {{ __('Roles') }}
                                     </x-dropdown-link>
                                     @endcan
+
+                                    @can('log.view')
+                                    <div class="border-t border-gray-200 dark:border-gray-600"></div>
+                                    <x-dropdown-link href="/log-viewer" target="_blank">
+                                        {{ __('Logs') }}
+                                    </x-dropdown-link>
+                                    @endcan
+
                                 </div>
                             </x-slot>
                         </x-dropdown>
