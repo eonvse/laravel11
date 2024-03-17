@@ -1,0 +1,22 @@
+/*Спиннер wire:loading*/
+.spinner {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    margin: 0 10px;
+    width:40px;
+    height:40px;
+    border:8px solid gray;
+    border-top:8px solid white;
+    border-radius:50%;
+    animation: rotate_circle 2s infinite ease-in-out;
+    z-index: 1001;
+}
+@keyframes rotate_circle {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
