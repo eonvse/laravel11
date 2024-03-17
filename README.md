@@ -32,6 +32,7 @@ gh auth login
 	* [Laravel 11](https://laravel.com/docs/11.x)
 	* [Tailwindcss 3](https://tailwindcss.com/docs/installation)
 	* [Livewire 3](https://livewire.laravel.com/docs)
+        * [Livewire Volt](https://livewire.laravel.com/docs/volt)
 * SVG иконки
 	* [Tailwind Toolbox](https://tailwindtoolbox.com/icons)
 	* [SVG Repo - Search, explore, edit and share open-licensed SVG vectors](https://www.svgrepo.com/)
