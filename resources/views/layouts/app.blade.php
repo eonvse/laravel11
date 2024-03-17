@@ -20,11 +20,14 @@
 
             <!-- Page Heading -->
             @if (isset($header))
-                <header class="bg-white dark:bg-gray-800 shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            <header class="bg-white dark:bg-gray-800 shadow">
+                <div class="max-w-7xl mx-auto grid grid-cols-3">
+                    <div class="py-3 px-4 sm:px-6 lg:px-8 ">
                         {{ $header }}
                     </div>
-                </header>
+                    <div class="col-span-2 content-center items-center place-content-center grid grid-cols-1"><div><x-banner /></div></div>
+                </div>
+            </header>
             @endif
 
             <!-- Page Content -->
