@@ -55,6 +55,12 @@ $logout = function (Logout $logout) {
                                     </x-dropdown-link>
                                     @endcan
 
+                                    @can('user.view')
+                                    <x-dropdown-link href="{{ route('users') }}" :active="request()->routeIs('users*')">
+                                        {{ __('Users') }}
+                                    </x-dropdown-link>
+                                    @endcan
+
                                     @can('log.view')
                                     <div class="border-t border-gray-200 dark:border-gray-600"></div>
                                     <x-dropdown-link href="/log-viewer" target="_blank">
@@ -130,6 +136,12 @@ $logout = function (Logout $logout) {
                 @can('role.view')
                 <x-responsive-nav-link href="{{ route('roles') }}" :active="request()->routeIs('roles*')">
                     {{ __('Roles') }}
+                </x-responsive-nav-link>
+                @endcan
+
+                @can('user.view')
+                <x-responsive-nav-link href="{{ route('users') }}" :active="request()->routeIs('users*')">
+                    {{ __('Users') }}
                 </x-responsive-nav-link>
                 @endcan
 

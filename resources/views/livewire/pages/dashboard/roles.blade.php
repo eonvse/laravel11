@@ -170,7 +170,7 @@ class extends Component
             <div class="p-4 text-gray-900 dark:text-gray-100">
                 <x-table>
                     <x-slot name="header">
-                        <x-table.head class="inline-block">ID</x-table.head>
+                        <x-table.head class="hidden">ID</x-table.head>
                         <x-table.head class="inline-block"
                                 sortable
                                 wire:click="sortBy('name')"
@@ -183,8 +183,8 @@ class extends Component
                     </x-slot>
                     @forelse ($roles as $role)
                     <x-table.row>
-                        <x-table.cell class="inline-block" scope="row">{{ $role->id }}</x-table.cell>
-                        <x-table.cell class="inline-block text-black">{{ $role->name }}</x-table.cell>
+                        <x-table.cell class="hidden" scope="row">{{ $role->id }}</x-table.cell>
+                        <x-table.cell class="inline-block text-black font-medium">{{ $role->name }}</x-table.cell>
                         <x-table.cell class="block">
                             @if ($role->name=='Super Admin')
                                 <x-marker.permission name="{{ __('All') }}" />

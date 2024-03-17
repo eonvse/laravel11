@@ -10,4 +10,9 @@ Route::middleware('auth', 'verified')->group(function () {
         ->name('roles');
     });
 
+    Route::group(['middleware' => ['permission:user.view']],function () {
+        Volt::route('users', 'pages.dashboard.users')
+        ->name('users');
+    });
+
 });

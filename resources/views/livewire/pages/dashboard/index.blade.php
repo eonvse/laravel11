@@ -7,11 +7,11 @@ use function Livewire\Volt\{state};
 ?>
 
 <div>
-    <div class="grid grid-cols-2">
+    <div class="sm:grid sm:grid-cols-2">
         <div class="row-span-3 border">Основное окно</div>
         <div class="min-h-32 border">Блок 1</div>
         <div class="min-h-32 border">
-            <div class="p-4 border-b">{{ __('Account') }}: {{ auth()->user()->name }}</div>
+            <div class="p-4 border-b text-black font-medium">{{ __('Account') }}: {{ auth()->user()->name }}</div>
             <div class="p-2 border-b">
                 @foreach (auth()->user()->getRoleNames() as $roleName)
                 <x-marker.role  :name="$roleName" />
@@ -25,11 +25,17 @@ use function Livewire\Volt\{state};
         </div>
         <div class="min-h-32 border">
             @canany(['log.view','role.view','user.view'])
-            <div class="p-4">{{ __('Management') }}</div>
+            <div class="p-4 text-black font-medium">{{ __('Management') }}</div>
             <div class="">
                 @can('role.view')
                 <x-dropdown-link href="{{ route('roles') }}" :active="request()->routeIs('roles*')">
                     {{ __('Roles') }}
+                </x-dropdown-link>
+                @endcan
+
+                @can('user.view')
+                <x-dropdown-link href="{{ route('users') }}" :active="request()->routeIs('users*')">
+                    {{ __('Users') }}
                 </x-dropdown-link>
                 @endcan
 
