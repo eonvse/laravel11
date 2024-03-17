@@ -69,6 +69,7 @@ class extends Component
     public function closeCreate()
     {
         $this->editForm->reset();
+        $this->editForm->resetValidation();
         $this->selectedPermissions = array();
         $this->showEdit = false;
     }
