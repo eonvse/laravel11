@@ -117,6 +117,32 @@ $logout = function (Logout $logout) {
             </x-responsive-nav-link>
         </div>
 
+        <!-- Management -->
+        @canany(['log.view','role.view','user.view'])
+        <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
+            <div class="flex items-center px-4">
+                <div>
+                    <div class="font-medium text-base text-gray-800 dark:text-gray-200">{{ __('Management') }}</div>
+                </div>
+            </div>
+
+            <div class="mt-3 space-y-1">
+                @can('role.view')
+                <x-responsive-nav-link href="{{ route('roles') }}" :active="request()->routeIs('roles*')">
+                    {{ __('Roles') }}
+                </x-responsive-nav-link>
+                @endcan
+
+                @can('log.view')
+                <x-responsive-nav-link href="/log-viewer" target="_blank">
+                    {{ __('Logs') }}
+                </x-responsive-nav-link>
+                @endcan
+
+            </div>
+        </div>
+        @endcanany
+
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
             <div class="px-4">

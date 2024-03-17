@@ -3,7 +3,7 @@
     'direction'
 ])
 
-<th {{ $attributes->merge(['class' => 'px-6 py-1 text-cyan-900 dark:text-cyan-200 text-xs block sm:table-cell']) }}>
+<th {{ $attributes->merge(['class' => 'px-6 py-1 text-cyan-900 dark:text-cyan-200 text-xs sm:table-cell']) }}>
     @isset($sortable)
     <div class="flex">
         <span class="underline {{ isset($direction) ? 'decoration-solid' : 'decoration-dotted' }} hover:cursor-pointer" title="Сортировать">{{$slot}}</span>

@@ -170,22 +170,22 @@ class extends Component
             <div class="p-4 text-gray-900 dark:text-gray-100">
                 <x-table>
                     <x-slot name="header">
-                        <x-table.head>ID</x-table.head>
-                        <x-table.head
+                        <x-table.head class="inline-block">ID</x-table.head>
+                        <x-table.head class="inline-block"
                                 sortable
                                 wire:click="sortBy('name')"
                                 :direction="$sortField === 'name' ? $sortDirection : null">
                                 {{ __('Role Name') }}
                         </x-table.head>
-                        <x-table.head>{{ __('Role Permissions') }}</x-table.head>
-                        <x-table.head>{{ __('Action') }}</x-table.head>
+                        <x-table.head class="block">{{ __('Role Permissions') }}</x-table.head>
+                        <x-table.head class="block">{{ __('Action') }}</x-table.head>
                         </tr>
                     </x-slot>
                     @forelse ($roles as $role)
                     <x-table.row>
-                        <x-table.cell scope="row">{{ $role->id }}</x-table.cell>
-                        <x-table.cell>{{ $role->name }}</x-table.cell>
-                        <x-table.cell>
+                        <x-table.cell class="inline-block" scope="row">{{ $role->id }}</x-table.cell>
+                        <x-table.cell class="inline-block text-black">{{ $role->name }}</x-table.cell>
+                        <x-table.cell class="block">
                             @if ($role->name=='Super Admin')
                                 <x-marker.permission name="{{ __('All') }}" />
                             @else
@@ -196,7 +196,7 @@ class extends Component
                                 @endforelse
                             @endif
                         </x-table.cell>
-                        <x-table.cell>
+                        <x-table.cell class="block">
                             <div class="flex items-center">
                                 @if ($role->name!='Super Admin')
                                     @can('role.edit')
