@@ -10,7 +10,19 @@ use function Livewire\Volt\{state};
     <div class="grid grid-cols-2">
         <div class="row-span-3 border">Основное окно</div>
         <div class="min-h-32 border">Блок 1</div>
-        <div class="min-h-32 border">Блок 2</div>
+        <div class="min-h-32 border">
+            <div class="p-4 border-b">{{ __('Account') }}: {{ auth()->user()->name }}</div>
+            <div class="p-2 border-b">
+                @foreach (auth()->user()->getRoleNames() as $roleName)
+                <x-marker.role  :name="$roleName" />
+                @endforeach
+            </div>
+            <div class="">
+                <x-dropdown-link :href="route('profile')" wire:navigate>
+                    {{ __('Profile') }}
+                </x-dropdown-link>
+            </div>
+        </div>
         <div class="min-h-32 border">
             @canany(['log.view','role.view','user.view'])
             <div class="p-4">{{ __('Management') }}</div>

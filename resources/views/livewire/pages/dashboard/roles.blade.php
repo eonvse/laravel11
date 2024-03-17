@@ -83,7 +83,7 @@ class extends Component
     public function save()
     {
 
-        $message = "Роль: " . $this->editForm->name . " coхранена.";
+        $message = "Роль: " . $this->editForm->nameRole . " coхранена.";
 
         $this->editForm->store();
 
@@ -231,8 +231,8 @@ class extends Component
             <form wire:submit="save">
                 <div class="p-2">
                     <x-input.label>{{ __('Role Name') }}</x-input.label>
-                    <x-input.text wire:model="editForm.name" required />
-                    @error('editForm.name') <x-error class="col-span-2">{{ $message }}</x-error> @enderror
+                    <x-input.text wire:model="editForm.nameRole" required />
+                    @error('editForm.nameRole') <x-error class="col-span-2">{{ $message }}</x-error> @enderror
                 </div>
 
                <div class="p-2">

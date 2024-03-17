@@ -18,7 +18,7 @@ class RoleEditForm extends Form
     public ?Role $role;
 
     #[Validate('required|min:5|unique:Spatie\Permission\Models\Role,name')]
-    public $name = '';
+    public $nameRole = '';
 
     #[Validate('required')]
     public $selectPermission = array();
@@ -26,7 +26,7 @@ class RoleEditForm extends Form
     public function setRole($role)
     {
         $this->role = $role;
-        $this->name = $role->name;
+        $this->nameRole = $role->name;
 
         $rolePermissions = DB::table("role_has_permissions")->where("role_id",$role->id)
         ->pluck('permission_id')
@@ -41,9 +41,9 @@ class RoleEditForm extends Form
 
         if (empty($this->role)) {
             $this->validate();
-            $this->role = Role::create(['name' => $this->name]);
+            $this->role = Role::create(['name' => $this->nameRole]);
         }else{
-            $this->role->update(['name' => $this->name]);
+            $this->role->update(['name' => $this->nameRole]);
         }
 
         $permissions = Permission::whereIn('id', $this->selectPermission)->get(['name'])->toArray();
