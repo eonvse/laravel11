@@ -18,7 +18,7 @@ php artisan db:seed --class=SuperAdminSeeder
 * [Laravel 11](https://laravel.com/docs/11.x)
     * [Laravel Sail (Docker)](https://laravel.com/docs/11.x/sail#main-content)
     * [Laravel Breeze](https://laravel.com/docs/11.x/starter-kits#breeze-and-livewire)
-    * [Spatie Permission](https://laravel-news.com/jetstream-spatie-permission)
+    * [Spatie Permission](https://spatie.be/docs/laravel-permission/v6/installation-laravel)
 
 ## Сопровождение
 
