@@ -20,14 +20,19 @@ php artisan db:seed --class=SuperAdminSeeder
     * [Laravel Breeze](https://laravel.com/docs/11.x/starter-kits#breeze-and-livewire)
     * [Spatie Permission](https://spatie.be/docs/laravel-permission/v6/installation-laravel)
 
-## Сопровождение
+## Роли
+<img src='README.img/roles.index.png' />
+
+<img src='README.img/roles.edit.png' />
+
+### Сопровождение
 
 * Re-authenticate with GitHub. 
 ```
 gh auth login
 ```
 
-## Авторские права:
+### Авторские права:
 * Фреймворки
 	* [Laravel 11](https://laravel.com/docs/11.x)
 	* [Tailwindcss 3](https://tailwindcss.com/docs/installation)
