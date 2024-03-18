@@ -41,7 +41,7 @@ use function Livewire\Volt\{state};
 
                 @can('log.view')
                 <div class="border-t border-gray-200 dark:border-gray-600"></div>
-                <x-dropdown-link href="/log-viewer" target="_blank">
+                <x-dropdown-link href="{{ env('APP_URL') }}/log-viewer" target="_blank">
                     {{ __('Logs') }}
                 </x-dropdown-link>
                 @endcan

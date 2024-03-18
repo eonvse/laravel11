@@ -5,7 +5,7 @@ use App\Livewire\Actions\Logout;
 $logout = function (Logout $logout) {
     $logout();
 
-    $this->redirect('/', navigate: true);
+    $this->redirect(env('APP_URL'), navigate: true);
 };
 
 ?>
@@ -63,7 +63,7 @@ $logout = function (Logout $logout) {
 
                                     @can('log.view')
                                     <div class="border-t border-gray-200 dark:border-gray-600"></div>
-                                    <x-dropdown-link href="/log-viewer" target="_blank">
+                                    <x-dropdown-link href="{{ env('APP_URL') }}/log-viewer" target="_blank">
                                         {{ __('Logs') }}
                                     </x-dropdown-link>
                                     @endcan
@@ -146,7 +146,7 @@ $logout = function (Logout $logout) {
                 @endcan
 
                 @can('log.view')
-                <x-responsive-nav-link href="/log-viewer" target="_blank">
+                <x-responsive-nav-link href="{{ env('APP_URL') }}/log-viewer" target="_blank">
                     {{ __('Logs') }}
                 </x-responsive-nav-link>
                 @endcan

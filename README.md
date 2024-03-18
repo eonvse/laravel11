@@ -4,14 +4,26 @@
 ```cmd
 git clone https://github.com/eonvse/timedata2.1.git
 cd laravel11
+sudo chmod -R 775 storage
+sudo chown -R $USER:www-data storage
+
 alias sail='[ -f sail ] && sh sail || sh vendor/bin/sail'
 sail up
 sail shell
+
 composer install
 npm run build
+
+cp .env.examlple .env
+###Настройка БД###
+
+php artisan key:generate
+
 php artisan migrate
-#php artisan db:seed
+
+#php artisan db:seed#
 php artisan db:seed --class=PermissionSeeder
+##После регистрации на сайте первым пользователем можно запустить миграцию SuperAdmin##
 php artisan db:seed --class=SuperAdminSeeder
 
 ```   	
