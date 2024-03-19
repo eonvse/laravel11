@@ -13,5 +13,4 @@ Route::view('profile', 'profile')
     ->name('profile');
 
 require __DIR__.'/auth.php';
-require __DIR__.'/dashboard.php';
-require __DIR__.'/livewire.php';
+require __DIR__.'/link/_init.php';
