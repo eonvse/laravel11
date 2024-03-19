@@ -9,7 +9,7 @@ Route::middleware('auth', 'verified')->group(function () {
 
     Route::group(['middleware' => ['permission:task.view']],function () {
 
-        Volt::route('tasks', 'pages.tasks.index')       ->name('tasks');
+        Volt::route('tasks', 'pages.tasks.indexTest')       ->name('tasks');
 
     });
 

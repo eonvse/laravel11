@@ -190,6 +190,8 @@ return [
         'itemUser.email'=>__('User Email'),
         'itemUser.password'=>__('User Password'),
         'nameRole' => __('Role Name'),
+        'nameTask' => __('Task name'),
+        'contentTask' => __('Task content'),
 
     ],
 
