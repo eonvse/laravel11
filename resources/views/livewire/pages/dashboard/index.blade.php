@@ -10,6 +10,13 @@ use function Livewire\Volt\{state};
     <div class="sm:grid sm:grid-cols-2">
         <div class="row-span-3 border-r border-r-gray-300">
             <div class="p-3 border-b text-black font-medium bg-gray-200">Основное окно</div>
+            <div>
+                @can('task.view')
+                <x-dropdown-link href="{{ route('tasks') }}" wire:navigate>
+                    {{ __('Tasks') }}
+                </x-dropdown-link>
+                @endcan
+            </div>
         </div>
         <div class="min-h-32 border-b">
             <div class="p-3 border-b text-black font-medium bg-gray-200">Блок 1</div>
@@ -32,13 +39,13 @@ use function Livewire\Volt\{state};
             <div class="p-3 text-black font-medium bg-gray-200">{{ __('Management') }}</div>
             <div class="">
                 @can('role.view')
-                <x-dropdown-link href="{{ route('roles') }}" :active="request()->routeIs('roles*')">
+                <x-dropdown-link href="{{ route('roles') }}" wire:navigate >
                     {{ __('Roles') }}
                 </x-dropdown-link>
                 @endcan
 
                 @can('user.view')
-                <x-dropdown-link href="{{ route('users') }}" :active="request()->routeIs('users*')">
+                <x-dropdown-link href="{{ route('users') }}" wire:navigate >
                     {{ __('Users') }}
                 </x-dropdown-link>
                 @endcan

@@ -25,6 +25,7 @@ state([
     'showCreate' => false,
     'showDelete' =>false,
     'delRecord' => null,
+    'taskInfo' => null
 ]);
 
 form(TaskCreateForm::class);
@@ -88,7 +89,19 @@ $destroy=function($task_id)
     $this->closeDelete();
     $this->dispatch('banner-message', style:'danger', message: $message);
     $this->tasksList = Tasks::wire_list($this->sortField,$this->sortDirection,$this->filter)->get();
+    $this->resetInfo();
 
+};
+
+$infoTask=function($task_id)
+{
+    $task = Tasks::get($task_id)->toArray();
+    $this->taskInfo = $task;//'<strong>Задача:</strong><br />'.$task->name.'<br /><strong>Содержание:</strong><br />'.$task->content;
+};
+
+$resetInfo=function()
+{
+    $this->taskInfo = null;
 };
 
 
@@ -98,7 +111,7 @@ $destroy=function($task_id)
 
 <div>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight" >
             {{ __('Tasks list') }}
         </h2>
     </x-slot>
@@ -106,9 +119,34 @@ $destroy=function($task_id)
     <div class="py-3">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                <div class="relative overflow-x-auto shadow-md sm:rounded-lg p-1">
+            <div class="flex">
+                <div class="hidden md:block p-3 md:w-[200px] lg:w-[300px] text-gray-500">
+                    @if (is_array($taskInfo))
+                        <div>{{ __('Task name') }}</div>
+                        <div class="text-black font-medium border-b">{{ $taskInfo['name'] }}</div>
+                        @isset($taskInfo['content'])
+                        <div>{{ __('Task content') }}</div>
+                        <div class="text-black font-medium border-b">{!! $taskInfo['content'] !!}</div>
+                        @endisset
+                        @isset($taskInfo['day'])
+                        <div>{{ __('Event Day') }}</div>
+                        <div class="text-black font-medium border-b">{{ date('d.m.Y', strtotime($taskInfo['day'])) }}</div>
+                        @endisset
+                        @isset($taskInfo['start'])
+                        <div>{{ __('Start') }}</div>
+                        <div class="text-black font-medium border-b">{{ date('H:i', strtotime($taskInfo['start'])) }}</div>
+                        @endisset
+                        @isset($taskInfo['end'])
+                        <div>{{ __('End') }}</div>
+                        <div class="text-black font-medium border-b">{{ date('H:i', strtotime($taskInfo['end'])) }}</div>
+                        @endisset
+                    @else
+                        Для отображения информации наведите указателем мыши на задачу.
+                    @endif
+                </div>
+                <div class="grow relative overflow-x-auto p-1">
                     @can('task.create')
-                    <div class="p-2">
+                    <div class="p-2" x-on:mouseover="$wire.resetInfo()">
                         <x-button.create wire:click="openCreate">{{ __('Add New Task') }}</x-button.create>
                     </div>
                     @endcan
@@ -118,14 +156,15 @@ $destroy=function($task_id)
                                 {{ __('Task name') }}
                             </x-table.head>
                             <x-table.head class="inline-block" 
+                                        x-on:mouseover="$wire.resetInfo()"
                                         scope="col"
                                         sortable
                                         wire:click="sortBy('day')"
                                         :direction="$sortField === 'day' ? $sortDirection : null">
                                         {{ __('Event Day') }}
                             </x-table.head>
-                            <x-table.head class="inline-block text-center">{{ __('Task time') }}</x-table.head>
                             <x-table.head class="inline-block" 
+                                        x-on:mouseover="$wire.resetInfo()"
                                         scope="col"
                                         sortable
                                         wire:click="sortBy('created_at')"
@@ -138,7 +177,7 @@ $destroy=function($task_id)
                             @endcan
                         </x-slot>
                         @forelse ($tasksList as $task)
-                            <x-table.row wire:key="{{ $task->id }}">
+                            <x-table.row wire:key="{{ $task->id }}" x-on:mouseover="$wire.infoTask({{ $task->id }})" >
                                 <x-table.cell class="block">
                                     <div class="relative items-center">
                                         <x-tooltip.bottom-cell class="px-2">
@@ -146,22 +185,10 @@ $destroy=function($task_id)
                                                 <div class="w-4 mx-1 {{ $task->color->base ?? '' }} dark:{{ $task->color->dark ?? '' }}">&nbsp;</div>
                                                 <div><x-link.table-cell href="">{{ $task->name }}</x-link.table-cell></div>
                                             </div>
-                                            @if (!empty($task->content))
-                                            <x-slot name='tooltip'>
-                                                <div class="font-semibold">{{ __('Task content') }}:</div>
-                                                <div>{!! $task->content !!}</div>
-                                            </x-slot>
-                                            @endif
                                         </x-tooltip.bottom-cell>
                                     </div>
                                 </x-table.cell>
                                 <x-table.cell class="inline-block tabular-nums">{{ $task->day_format }}</x-table.cell>
-                                <x-table.cell class="inline-block tabular-nums text-center">
-                                    <div class="grid grid-cols-2">
-                                        <div>{{ $task->start_format }}</div>
-                                        <div>{{ $task->end_format }}</div>
-                                    </div>
-                                </x-table.cell>
                                 <x-table.cell class="inline-block tabular-nums">{{ $task->created }}</x-table.cell>
                                 <x-table.cell class="inline-block">{{ $task->autor->name }}</x-table.cell>
                                 @can('task.edit')
@@ -186,6 +213,7 @@ $destroy=function($task_id)
                     </x-table>
                     <div class="m-2"> $list->links() </div>
                 </div>
+            </div>
             </div>
         </div>
     </div>
