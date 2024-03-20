@@ -3,146 +3,96 @@
 use App\DB\Tasks;
 use App\Models\Color;
 
+use App\Livewire\Forms\TaskCreateForm;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 //Log::debug('selectedPermissions = ' . implode(',',$this->selectedPermissions));
 //Log::notice('---Volt Roles---');
 
-use Livewire\Attributes\{Layout, Title};
-use Livewire\Volt\Component;
+use function Livewire\Volt\{layout, state, title, mount, form};
+ 
+layout('layouts.app');
+ 
+title(fn () => __('Tasks'));
 
-new
-#[Layout('layouts.app')]
-#[Title('Tasks')]
-class extends Component
+state(['colors','tasksList']);
+
+state([
+    'sortField' => 'created_at',
+    'sortDirection' => 'desc',
+    'filter' => null,
+    'showCreate' => false,
+    'showDelete' =>false,
+    'delRecord' => null,
+]);
+
+form(TaskCreateForm::class);
+
+mount(function() {
+    $this->colors = Color::orderBy('base')->get()->toArray();
+    $this->tasksList = Tasks::wire_list($this->sortField,$this->sortDirection,$this->filter)->get();
+});
+
+$sortBy = function($field)
 {
-    public $autor_id;
+    $this->sortDirection = $this->sortField === $field
+                        ? $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc'
+                        : 'asc';
 
-    public $newRecord, $delRecord; //массивы для модальных окон создания и удаления
-    public $sortField, $sortDirection; //сортировка по полю
-    public $filter; //массив фильтра
-    public $showCreate, $showDelete;
+    $this->sortField = $field;
+    $this->tasksList = Tasks::wire_list($this->sortField,$this->sortDirection,$this->filter)->get();
+};
 
-    public $colors, $tasksList;
+$openCreate = function()
+{
+    $this->showCreate = true;
+};
 
-    public function resetRecords()
-    {
+$closeCreate = function()
+{
+    $this->form->reset();
+    $this->form->resetValidation();
+    $this->showCreate = false;
+};
 
-        $this->newRecord = array(
-            'name'=>null,
-            'autor_id'=>$this->autor_id,
-            'team_id'=>0,
-            'color_id'=>1,
-            'day'=>null,
-            'start'=>null,
-            'end'=>null,
-            'content'=>null,
-            'isDone'=>0,
-            'dateDone'=>null,
-        );
+$save = function()
+{
+    $message = "Задача: " . $this->form->nameTask . " добавлена.";
 
-        $this->delRecord = null;
+    $this->form->store();
 
-        $this->resetValidation();
+    $this->dispatch('banner-message', style:'success', message: $message);
 
-    }
+    $this->tasksList = Tasks::wire_list($this->sortField,$this->sortDirection,$this->filter)->get();
+    $this->closeCreate();
 
-    public function mount()
-    {
-        $this->autor_id = Auth::id();
+};
 
-        $this->resetRecords();
+$openDelete=function($task_id)
+{
+    $this->delRecord = Tasks::getDelMessage($task_id);
+    $this->showDelete = true;
+};
 
-        $this->sortField = 'created_at';
-        $this->sortDirection = 'desc';
-        $this->filter=null;
+$closeDelete=function()
+{
+    $this->delRecord = null;
+    $this->showDelete = false;
+};
 
-        $this->showCreate = $this->showDelete = false;
-        $this->colors = Color::orderBy('base')->get()->toArray();
-        $this->tasksList = Tasks::wire_list($this->sortField,$this->sortDirection,$this->filter)->get();
+$destroy=function($task_id)
+{
+    $message = "Удалена задача: " . $this->delRecord->name;
+    Tasks::delete($task_id);
+    $this->closeDelete();
+    $this->dispatch('banner-message', style:'danger', message: $message);
+    $this->tasksList = Tasks::wire_list($this->sortField,$this->sortDirection,$this->filter)->get();
 
-    }
-
-    public function rules()
-    {
-        $rules = [];
-
-        $rules['newRecord.name'] = 'required|min:3';
-        $rules['newRecord.autor_id'] = 'decimal:0';
-        $rules['newRecord.team_id'] = 'decimal:0';
-        $rules['newRecord.color_id'] = 'decimal:0';
-        $rules['newRecord.day'] = 'nullable|date';
-        $rules['newRecord.start'] = 'nullable';
-        $rules['newRecord.end'] = 'nullable';
-        $rules['newRecord.content'] = 'nullable|min:10';
-        $rules['newRecord.isDone'] = 'nullable';
-        $rules['newRecord.dateDone'] = 'nullable|date';
+};
 
 
-        return $rules;
-    }
 
-    public function sortBy($field)
-    {
-        $this->sortDirection = $this->sortField === $field
-                            ? $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc'
-                            : 'asc';
-
-        $this->sortField = $field;
-        $this->tasksList = Tasks::wire_list($this->sortField,$this->sortDirection,$this->filter)->get();
-
-    }
-
-    public function openCreate()
-    {
-        $this->showCreate = true;
-    }
-
-    public function closeCreate()
-    {
-        $this->resetRecords();
-        $this->showCreate = false;
-    }
-
-    public function save()
-    {
-
-        $this->validate();
-
-        Tasks::create($this->newRecord);
-        $message = "Задача " . $this->newRecord['name'] . " сохранена";
-        $this->closeCreate();
-        $this->dispatch('banner-message', style:'success', message: $message);
-
-        $this->tasksList = Tasks::wire_list($this->sortField,$this->sortDirection,$this->filter)->get();
-
-
-    }
-
-    public function openDelete($task_id)
-    {
-        $this->delRecord = Tasks::getDelMessage($task_id);
-        $this->showDelete = true;
-    }
-
-    public function closeDelete()
-    {
-        $this->delRecord = null;
-        $this->showDelete = false;
-    }
-
-    public function destroy($task_id)
-    {
-        $message = "Удалена задача: " . Tasks::getFieldValue($task_id,'name');
-        Tasks::delete($task_id);
-        $this->closeDelete();
-        $this->dispatch('banner-message', style:'danger', message: $message);
-
-        $this->tasksList = Tasks::wire_list($this->sortField,$this->sortDirection,$this->filter)->get();
-
-    }
-
-}
 
 ?>
 
@@ -164,32 +114,32 @@ class extends Component
                     @endcan
                     <x-table>
                         <x-slot name="header">
-                            <x-table.head>
+                            <x-table.head class="block">
                                 {{ __('Task name') }}
                             </x-table.head>
-                            <x-table.head scope="col"
+                            <x-table.head class="inline-block" 
+                                        scope="col"
                                         sortable
                                         wire:click="sortBy('day')"
                                         :direction="$sortField === 'day' ? $sortDirection : null">
                                         {{ __('Event Day') }}
                             </x-table.head>
-                            <x-table.head class="text-center">{{ __('Task time') }}</x-table.head>
-                            <x-table.head scope="col"
+                            <x-table.head class="inline-block text-center">{{ __('Task time') }}</x-table.head>
+                            <x-table.head class="inline-block" 
+                                        scope="col"
                                         sortable
                                         wire:click="sortBy('created_at')"
                                         :direction="$sortField === 'created_at' ? $sortDirection : null">
                                         {{ __('Created_at') }}
                             </x-table.head>
-                            <x-table.head>{{ __('Autor') }}</x-table.head>
+                            <x-table.head class="inline-block">{{ __('Autor') }}</x-table.head>
                             @can('task.edit')
-                            <x-table.head>
-
-                            </x-table.head>
+                            <x-table.head class="block">{{ __('Action') }}</x-table.head>
                             @endcan
                         </x-slot>
                         @forelse ($tasksList as $task)
                             <x-table.row wire:key="{{ $task->id }}">
-                                <x-table.cell>
+                                <x-table.cell class="block">
                                     <div class="relative items-center">
                                         <x-tooltip.bottom-cell class="px-2">
                                             <div class="flex items-center">
@@ -205,17 +155,17 @@ class extends Component
                                         </x-tooltip.bottom-cell>
                                     </div>
                                 </x-table.cell>
-                                <x-table.cell class="tabular-nums">{{ $task->day_format }}</x-table.cell>
-                                <x-table.cell class="tabular-nums text-center">
+                                <x-table.cell class="inline-block tabular-nums">{{ $task->day_format }}</x-table.cell>
+                                <x-table.cell class="inline-block tabular-nums text-center">
                                     <div class="grid grid-cols-2">
                                         <div>{{ $task->start_format }}</div>
                                         <div>{{ $task->end_format }}</div>
                                     </div>
                                 </x-table.cell>
-                                <x-table.cell class="tabular-nums">{{ $task->created }}</x-table.cell>
-                                <x-table.cell>{{ $task->autor->name }}</x-table.cell>
+                                <x-table.cell class="inline-block tabular-nums">{{ $task->created }}</x-table.cell>
+                                <x-table.cell class="inline-block">{{ $task->autor->name }}</x-table.cell>
                                 @can('task.edit')
-                                <x-table.cell>
+                                <x-table.cell class="block">
                                     <div class="flex items-center">
                                     <x-link.icon-edit />
                                     @can('task.delete')
@@ -228,7 +178,7 @@ class extends Component
                             </x-table.row>
                         @empty
                             <x-table.row>
-                                <x-table.cell class="text-center" colspan="6">
+                                <x-table.cell class="block text-center" colspan="6">
                                     {{ __('No tasks found') }}
                                 </x-table.cell>
                             </x-table.row>
@@ -248,46 +198,45 @@ class extends Component
             <div>
 
                 <form wire:submit="save">
-                    <input type="hidden" wire:model="newRecord.team_id" />
                     <div>
                         <x-input.label value="{{ __('Task name') }}" />
-                        <x-input.text wire:model="newRecord.name" required autofocus />
-                        @error('newRecord.name') <x-error>{{ $message }}</x-error> @enderror
+                        <x-input.text wire:model="form.nameTask" required autofocus />
+                        @error('form.nameTask') <x-error>{{ $message }}</x-error> @enderror
                     </div>
                     <div>
                         @php
                         $colorBg = '';
                         foreach ($colors as $color)
-                            if ($color['id']==$newRecord['color_id']) $colorBg = $color['base'].' dark:'.$color['dark'];
+                            if ($color['id']==$form->colorTask) $colorBg = $color['base'].' dark:'.$color['dark'];
                         @endphp
                         <x-input.label class="flex items-center">
                             Цвет
                             <div class="{{ $colorBg }} w-full m-2">&nbsp;</div>
                         </x-input.label>
-                        <x-input.select-color :items="$colors" wire:model.live="newRecord.color_id"/>
-
+                        <x-input.select-color :items="$colors" wire:model.live="form.colorTask"/>
+                        @error('form.colorTask') <x-error>{{ $message }}</x-error> @enderror
                     </div>
                     <div class="my-1">
                         <x-input.label class="my-2" value="{{ __('Task content') }}" />
-                        <x-input.div-editable wire:model="newRecord.content" editable="true" >{!! $newRecord['content'] !!}</x-input.div-editable>
-                        @error('newRecord.content') <x-error>{{ $message }}</x-error> @enderror
+                        <x-input.div-editable wire:model="form.contentTask" editable="true" >{!! $form->contentTask !!}</x-input.div-editable>
+                        @error('form.contentTask') <x-error>{{ $message }}</x-error> @enderror
                     </div>
                     <div class="my-1 sm:grid sm:grid-cols-[100px_minmax(0,_1fr)] items-center">
                         <x-input.label>Дата</x-input.label>
-                        <x-input.text type="date" min="1970-01-01" max="2124-12-31" wire:model.blur="newRecord.day" />
+                        <x-input.text type="date" min="1970-01-01" max="2124-12-31" wire:model.blur="form.dayTask" />
                     </div>
                     <div class="my-1 sm:grid sm:grid-cols-[100px_minmax(0,_1fr)] items-center">
                         <x-input.label>Начало</x-input.label>
-                        <x-input.text type="time" wire:model.blur="newRecord.start" />
-                        @error('newRecord.start') <x-error class="col-span-2">{{ $message }}</x-error> @enderror
+                        <x-input.text type="time" wire:model.blur="form.startTask" />
+                        @error('form.startTask') <x-error class="col-span-2">{{ $message }}</x-error> @enderror
                     </div>
                     <div class="my-1 sm:grid sm:grid-cols-[100px_minmax(0,_1fr)] items-center">
                         <x-input.label>Завершение</x-input.label>
-                        <x-input.text type="time" wire:model.blur="newRecord.end" />
-                        @error('newRecord.end') <x-error class="col-span-2">{{ $message }}</x-error> @enderror
+                        <x-input.text type="time" wire:model.blur="form.endTask" />
+                        @error('form.endTask') <x-error class="col-span-2">{{ $message }}</x-error> @enderror
                     </div>
                     <div class="flex mt-4">
-                        <x-button.create>{{ __('Save Task') }}</x-button.create>
+                        <x-button.create>{{ __('Save') }}</x-button.create>
                         <x-button.secondary wire:click="closeCreate">{{ __('Cancel') }}</x-button.secondary>
                     </div>
                 </form>
@@ -314,7 +263,6 @@ class extends Component
             </div>
         </x-slot>
     </x-modal-wire.dialog>
-
 
     <x-spinner wire:loading wire:target="sortBy" />
     <x-spinner wire:loading wire:target="openCreate" />

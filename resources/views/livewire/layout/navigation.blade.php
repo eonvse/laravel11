@@ -27,6 +27,12 @@ $logout = function (Logout $logout) {
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
                         {{ __('Dashboard') }}
                     </x-nav-link>
+
+                    @can('task.view')
+                    <x-nav-link :href="route('tasks')" :active="request()->routeIs('tasks*')" wire:navigate>
+                        {{ __('Tasks') }}
+                    </x-nav-link>
+                    @endcan
                 </div>
             </div>
 
@@ -121,6 +127,12 @@ $logout = function (Logout $logout) {
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+            
+            @can('task.view')
+            <x-responsive-nav-link :href="route('tasks')" :active="request()->routeIs('tasks*')" wire:navigate>
+                {{ __('Tasks') }}
+            </x-responsive-nav-link>
+            @endcan
         </div>
 
         <!-- Management -->
@@ -134,13 +146,13 @@ $logout = function (Logout $logout) {
 
             <div class="mt-3 space-y-1">
                 @can('role.view')
-                <x-responsive-nav-link href="{{ route('roles') }}" :active="request()->routeIs('roles*')">
+                <x-responsive-nav-link href="{{ route('roles') }}" :active="request()->routeIs('roles*')" wire:navigate>
                     {{ __('Roles') }}
                 </x-responsive-nav-link>
                 @endcan
 
                 @can('user.view')
-                <x-responsive-nav-link href="{{ route('users') }}" :active="request()->routeIs('users*')">
+                <x-responsive-nav-link href="{{ route('users') }}" :active="request()->routeIs('users*')" wire:navigate>
                     {{ __('Users') }}
                 </x-responsive-nav-link>
                 @endcan

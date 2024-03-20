@@ -15,7 +15,7 @@ class TaskCreateForm extends Form
     #[Validate('required|min:3')]
     public $nameTask;
 
-    #[Validate('decimal:0')]
+    #[Validate('nullable|digits_between:1,2')]
     public $colorTask;
 
     #[Validate('nullable|min:10')]

@@ -101,7 +101,17 @@
     "User delete":"Удалить пользователя",
     "User Delete Message":"Сообщение при удалении пользователя",
     "Management":"Управление",
-    "Logs":"Журнал логов"
+    "Logs":"Журнал логов",
+    "Tasks":"Задачи",
+    "Tasks list":"Список задач",
+    "Add New Task":"Добавить задачу",
+    "Task name":"Название задачи",
+    "Event Day":"День",
+    "Task time":"Время",
+    "Task content":"Содержание",
+    "No tasks found":"Задач не найдено",
+    "Task delete":"Удалить задачу",
+    "Task Delete Message":"Сообщение при удалении задачи."
 
 
 }
