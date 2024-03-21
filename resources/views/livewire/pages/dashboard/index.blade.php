@@ -12,7 +12,7 @@ use function Livewire\Volt\{state};
             <div class="p-3 border-b text-black font-medium bg-gray-200">Основное окно</div>
             <div>
                 @can('task.view')
-                <x-dropdown-link href="{{ route('tasks') }}" wire:navigate>
+                <x-dropdown-link href="{{ route('tasks') }}" >
                     {{ __('Tasks') }}
                 </x-dropdown-link>
                 @endcan
@@ -29,7 +29,7 @@ use function Livewire\Volt\{state};
                 @endforeach
             </div>
             <div class="">
-                <x-dropdown-link :href="route('profile')" wire:navigate>
+                <x-dropdown-link :href="route('profile')" >
                     {{ __('Profile') }}
                 </x-dropdown-link>
             </div>
@@ -39,13 +39,13 @@ use function Livewire\Volt\{state};
             <div class="p-3 text-black font-medium bg-gray-200">{{ __('Management') }}</div>
             <div class="">
                 @can('role.view')
-                <x-dropdown-link href="{{ route('roles') }}" wire:navigate >
+                <x-dropdown-link href="{{ route('roles') }}"  >
                     {{ __('Roles') }}
                 </x-dropdown-link>
                 @endcan
 
                 @can('user.view')
-                <x-dropdown-link href="{{ route('users') }}" wire:navigate >
+                <x-dropdown-link href="{{ route('users') }}"  >
                     {{ __('Users') }}
                 </x-dropdown-link>
                 @endcan
