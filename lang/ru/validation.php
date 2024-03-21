@@ -16,8 +16,8 @@ return [
     'accepted' => 'The :attribute field must be accepted.',
     'accepted_if' => 'The :attribute field must be accepted when :other is :value.',
     'active_url' => 'The :attribute field must be a valid URL.',
-    'after' => 'The :attribute field must be a date after :date.',
-    'after_or_equal' => 'The :attribute field must be a date after or equal to :date.',
+    'after' => 'Поле :attribute должно быть позже поля :date.',
+    'after_or_equal' => 'Поле :attribute должно быть позже или равно полю :date.',
     'alpha' => 'The :attribute field must only contain letters.',
     'alpha_dash' => 'The :attribute field must only contain letters, numbers, dashes, and underscores.',
     'alpha_num' => 'The :attribute field must only contain letters and numbers.',
@@ -192,6 +192,8 @@ return [
         'nameRole' => __('Role Name'),
         'nameTask' => __('Task name'),
         'contentTask' => __('Task content'),
+        'endTask' => __('End'),
+        'startTask' => __('Start'),
 
     ],
 

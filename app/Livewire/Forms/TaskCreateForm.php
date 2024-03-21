@@ -27,13 +27,13 @@ class TaskCreateForm extends Form
     #[Validate('nullable')]
     public $startTask;
 
-    #[Validate('nullable')]
+    #[Validate('nullable|after:startTask')]
     public $endTask;
 
     public function store()
     {
         $this->validate();
-        
+
         $data = [
             'name' => $this->nameTask,
             'autor_id' => Auth::id(),

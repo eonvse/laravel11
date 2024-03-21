@@ -111,7 +111,9 @@
     "Task content":"Содержание",
     "No tasks found":"Задач не найдено",
     "Task delete":"Удалить задачу",
-    "Task Delete Message":"Сообщение при удалении задачи."
+    "Task Delete Message":"Сообщение при удалении задачи.",
+    "Start":"Начало",
+    "End":"Завершение"
 
 
 }

@@ -11,9 +11,9 @@ use Illuminate\Support\Facades\Log;
 //Log::notice('---Volt Roles---');
 
 use function Livewire\Volt\{layout, state, title, mount, form};
- 
+
 layout('layouts.app');
- 
+
 title(fn () => __('Tasks'));
 
 state(['colors','tasksList']);
@@ -95,8 +95,7 @@ $destroy=function($task_id)
 
 $infoTask=function($task_id)
 {
-    $task = Tasks::get($task_id)->toArray();
-    $this->taskInfo = $task;//'<strong>Задача:</strong><br />'.$task->name.'<br /><strong>Содержание:</strong><br />'.$task->content;
+    $this->taskInfo = Tasks::get($task_id)->toArray();
 };
 
 $resetInfo=function()
@@ -124,10 +123,6 @@ $resetInfo=function()
                     @if (is_array($taskInfo))
                         <div>{{ __('Task name') }}</div>
                         <div class="text-black font-medium border-b">{{ $taskInfo['name'] }}</div>
-                        @isset($taskInfo['content'])
-                        <div>{{ __('Task content') }}</div>
-                        <div class="text-black font-medium border-b">{!! $taskInfo['content'] !!}</div>
-                        @endisset
                         @isset($taskInfo['day'])
                         <div>{{ __('Event Day') }}</div>
                         <div class="text-black font-medium border-b">{{ date('d.m.Y', strtotime($taskInfo['day'])) }}</div>
@@ -139,6 +134,10 @@ $resetInfo=function()
                         @isset($taskInfo['end'])
                         <div>{{ __('End') }}</div>
                         <div class="text-black font-medium border-b">{{ date('H:i', strtotime($taskInfo['end'])) }}</div>
+                        @endisset
+                        @isset($taskInfo['content'])
+                        <div>{{ __('Task content') }}</div>
+                        <div class="text-black font-medium border-b">{!! $taskInfo['content'] !!}</div>
                         @endisset
                     @else
                         Для отображения информации наведите указателем мыши на задачу.
@@ -155,7 +154,7 @@ $resetInfo=function()
                             <x-table.head class="block">
                                 {{ __('Task name') }}
                             </x-table.head>
-                            <x-table.head class="inline-block" 
+                            <x-table.head class="inline-block"
                                         x-on:mouseover="$wire.resetInfo()"
                                         scope="col"
                                         sortable
@@ -163,7 +162,7 @@ $resetInfo=function()
                                         :direction="$sortField === 'day' ? $sortDirection : null">
                                         {{ __('Event Day') }}
                             </x-table.head>
-                            <x-table.head class="inline-block" 
+                            <x-table.head class="inline-block"
                                         x-on:mouseover="$wire.resetInfo()"
                                         scope="col"
                                         sortable
@@ -172,36 +171,33 @@ $resetInfo=function()
                                         {{ __('Created_at') }}
                             </x-table.head>
                             <x-table.head class="inline-block">{{ __('Autor') }}</x-table.head>
-                            @can('task.edit')
-                            <x-table.head class="block">{{ __('Action') }}</x-table.head>
-                            @endcan
                         </x-slot>
                         @forelse ($tasksList as $task)
                             <x-table.row wire:key="{{ $task->id }}" x-on:mouseover="$wire.infoTask({{ $task->id }})" >
                                 <x-table.cell class="block">
                                     <div class="relative items-center">
-                                        <x-tooltip.bottom-cell class="px-2">
+                                        <div class="flex">
+                                            @can('task.edit')
                                             <div class="flex items-center">
-                                                <div class="w-4 mx-1 {{ $task->color->base ?? '' }} dark:{{ $task->color->dark ?? '' }}">&nbsp;</div>
-                                                <div><x-link.table-cell href="">{{ $task->name }}</x-link.table-cell></div>
+                                                <x-link.icon-edit href="{{ route('tasks.edit', ['task'=>$task, 'editable'=>1]) }}" title="{{ __('Edit') }}" />
+                                                @can('task.delete')
+                                                <x-button.icon-del  wire:click="openDelete({{ $task->id }})"/>
+                                                @endcan
                                             </div>
-                                        </x-tooltip.bottom-cell>
+                                            @endcan
+                                           <div class="ml-2 grow flex items-center">
+                                                <div class="w-4 mx-1 {{ $task->color->base ?? '' }} dark:{{ $task->color->dark ?? '' }}">&nbsp;</div>
+                                                <div><x-link.table-cell href="{{ route('tasks.edit', $task) }}">{{ $task->name }}</x-link.table-cell></div>
+                                            </div>
+                                            <div>
+                                                {{ $task->isDone }}
+                                            </div>
+                                        </div>
                                     </div>
                                 </x-table.cell>
                                 <x-table.cell class="inline-block tabular-nums">{{ $task->day_format }}</x-table.cell>
                                 <x-table.cell class="inline-block tabular-nums">{{ $task->created }}</x-table.cell>
                                 <x-table.cell class="inline-block">{{ $task->autor->name }}</x-table.cell>
-                                @can('task.edit')
-                                <x-table.cell class="block">
-                                    <div class="flex items-center">
-                                    <x-link.icon-edit />
-                                    @can('task.delete')
-                                    <x-button.icon-del  wire:click="openDelete({{ $task->id }})"/>
-                                    @endcan
-                                    </div>
-
-                                </x-table.cell>
-                                @endcan
                             </x-table.row>
                         @empty
                             <x-table.row>
@@ -250,16 +246,16 @@ $resetInfo=function()
                         @error('form.contentTask') <x-error>{{ $message }}</x-error> @enderror
                     </div>
                     <div class="my-1 sm:grid sm:grid-cols-[100px_minmax(0,_1fr)] items-center">
-                        <x-input.label>Дата</x-input.label>
+                        <x-input.label>{{ __('Event Day') }}</x-input.label>
                         <x-input.text type="date" min="1970-01-01" max="2124-12-31" wire:model.blur="form.dayTask" />
                     </div>
                     <div class="my-1 sm:grid sm:grid-cols-[100px_minmax(0,_1fr)] items-center">
-                        <x-input.label>Начало</x-input.label>
+                        <x-input.label>{{ __('Start') }}</x-input.label>
                         <x-input.text type="time" wire:model.blur="form.startTask" />
                         @error('form.startTask') <x-error class="col-span-2">{{ $message }}</x-error> @enderror
                     </div>
                     <div class="my-1 sm:grid sm:grid-cols-[100px_minmax(0,_1fr)] items-center">
-                        <x-input.label>Завершение</x-input.label>
+                        <x-input.label>{{ __('End') }}</x-input.label>
                         <x-input.text type="time" wire:model.blur="form.endTask" />
                         @error('form.endTask') <x-error class="col-span-2">{{ $message }}</x-error> @enderror
                     </div>
