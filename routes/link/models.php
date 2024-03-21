@@ -3,15 +3,19 @@
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
+use App\Models\Task;
+
 Route::middleware('auth', 'verified')->group(function () {
 
     Route::view('/colors', 'colors')->name('colors');
 
-    Route::group(['middleware' => ['permission:task.view']],function () {
+    Volt::route('tasks', 'pages.tasks.index')
+    ->middleware(['permission:task.view'])
+    ->name('tasks');
 
-        Volt::route('tasks', 'pages.tasks.index')       ->name('tasks');
-
-    });
+    Route::get('/tasks/{task}/{editable?}', [\App\Http\Controllers\ModelController::class,'taskEdit'])
+    ->middleware(['permission:task.edit'])
+    ->name('tasks.edit');
 
 
 });

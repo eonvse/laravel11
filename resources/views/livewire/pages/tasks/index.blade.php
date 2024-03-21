@@ -6,7 +6,7 @@ use App\Models\Color;
 use App\Livewire\Forms\TaskCreateForm;
 
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
+//use Illuminate\Support\Facades\Log;
 //Log::debug('selectedPermissions = ' . implode(',',$this->selectedPermissions));
 //Log::notice('---Volt Roles---');
 
@@ -234,7 +234,7 @@ $resetInfo=function()
                             if ($color['id']==$form->colorTask) $colorBg = $color['base'].' dark:'.$color['dark'];
                         @endphp
                         <x-input.label class="flex items-center">
-                            Цвет
+                            {{ __('Color') }}
                             <div class="{{ $colorBg }} w-full m-2">&nbsp;</div>
                         </x-input.label>
                         <x-input.select-color :items="$colors" wire:model.live="form.colorTask"/>
