@@ -10,13 +10,13 @@ use Illuminate\Support\Facades\Auth;
 //Log::debug('selectedPermissions = ' . implode(',',$this->selectedPermissions));
 //Log::notice('---Volt Roles---');
 
-use function Livewire\Volt\{layout, state, title, mount, form};
+use function Livewire\Volt\{layout, state, title, mount, form, updated};
 
 layout('layouts.app');
 
 title(fn () => __('Tasks'));
 
-state(['colors','tasksList']);
+state(['colors','tasksList','filter']);
 
 state([
     'sortField' => 'created_at',
@@ -25,15 +25,19 @@ state([
     'showCreate' => false,
     'showDelete' =>false,
     'delRecord' => null,
-    'taskInfo' => null
+    'taskInfo' => null,
+    'statuses' => [0=>'Все',2=>'Выполненные',1=>'Невыполненные']
 ]);
 
 form(TaskCreateForm::class);
 
 mount(function() {
     $this->colors = Color::orderBy('base')->get()->toArray();
+    $this->filter = ['status'=>0];
     $this->tasksList = Tasks::wire_list($this->sortField,$this->sortDirection,$this->filter)->get();
 });
+
+updated(['filter.status' => fn () => $this->tasksList = Tasks::wire_list($this->sortField,$this->sortDirection,$this->filter)->get() ]);
 
 $sortBy = function($field)
 {
@@ -103,6 +107,12 @@ $resetInfo=function()
     $this->taskInfo = null;
 };
 
+$perform=function($taskId)
+{
+    Tasks::perform($taskId);
+    $this->tasksList = Tasks::wire_list($this->sortField,$this->sortDirection,$this->filter)->get();
+}
+
 
 
 
@@ -139,16 +149,25 @@ $resetInfo=function()
                         <div>{{ __('Task content') }}</div>
                         <div class="text-black font-medium border-b">{!! $taskInfo['content'] !!}</div>
                         @endisset
+                        @isset($taskInfo['dateDone'])
+                        <div>{{ __('dateDone') }}</div>
+                        <div class="text-black font-medium border-b">{{ date('d.m.Y', strtotime($taskInfo['dateDone'])) }}</div>
+                        @endisset
                     @else
                         Для отображения информации наведите указателем мыши на задачу.
                     @endif
                 </div>
                 <div class="grow relative overflow-x-auto p-1">
-                    @can('task.create')
-                    <div class="p-2" x-on:mouseover="$wire.resetInfo()">
-                        <x-button.create wire:click="openCreate">{{ __('Add New Task') }}</x-button.create>
+                    <div class="flex">
+                        @can('task.create')
+                        <div class="p-2 border-r" x-on:mouseover="$wire.resetInfo()">
+                            <x-button.create wire:click="openCreate">{{ __('Add New Task') }}</x-button.create>
+                        </div>
+                        @endcan
+                        <div class="p-2 flex">
+                            <div class="p-1 flex-none">{{ __('Task filter') }}</div>
+                            <x-input.select-status :items="$statuses" wire:model="filter.status"/></div>
                     </div>
-                    @endcan
                     <x-table>
                         <x-slot name="header">
                             <x-table.head class="block">
@@ -189,8 +208,8 @@ $resetInfo=function()
                                                 <div class="w-4 mx-1 {{ $task->color->base ?? '' }} dark:{{ $task->color->dark ?? '' }}">&nbsp;</div>
                                                 <div><x-link.table-cell href="{{ route('tasks.edit', $task) }}">{{ $task->name }}</x-link.table-cell></div>
                                             </div>
-                                            <div>
-                                                {{ $task->isDone }}
+                                            <div class="justify-center align-middle">
+                                                <x-marker.check :value="$task->isDone" wire:click="perform({{ $task->id }})" />
                                             </div>
                                         </div>
                                     </div>

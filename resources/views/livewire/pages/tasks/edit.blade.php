@@ -3,6 +3,8 @@
 use App\Models\Task;
 use App\Models\Color;
 
+use App\DB\Tasks;
+
 use App\Livewire\Forms\TaskEditForm;
 
 use Illuminate\Support\Facades\Auth;
@@ -74,6 +76,12 @@ $destroy = function(){
 
 };
 
+$perform=function($taskId)
+{
+    Tasks::perform($taskId);
+    $this->task = Tasks::get($taskId);
+};
+
 ?>
 <div class="bg-neutral-200">
     <form wire:submit="save" class="sm:flex">
@@ -123,8 +131,8 @@ $destroy = function(){
                     @error('form.endTask') <x-error>{{ $message }}</x-error> @enderror
                 </div>
             </div>
-            <div class="p-1 col-span-2">{{ $task->isDone }}</div>
-            <div class="p-1">{{ $task->dateDone }}</div>
+            <div class="p-1 col-span-2"><x-marker.check :value="$task->isDone" type="form" wire:click="perform({{ $task->id }})" /></div>
+            <div class="p-1">{{ empty($task->dateDone) ? '-' : date('d.m.Y',strtotime($task->dateDone)) }}</div>
         </div>
         @else
         <div class="sm:grid sm:grid-cols-6 font-medium items-center border-b border-neutral-400 border-dashed">
@@ -137,7 +145,7 @@ $destroy = function(){
             <div class="p-2">{{ empty($task->day) ? '-' : $task->day_format }}</div>
             <div class="p-2">{{ empty($task->start) ? '-' : $task->start_format }}</div>
             <div class="p-2">{{ empty($task->end) ? '-' : $task->end_format }}</div>
-            <div class="p-2 col-span-2">{{ $task->isDone }}</div>
+            <div class="p-2 col-span-2"><x-marker.check :value="$task->isDone" type="form" wire:click="perform({{ $task->id }})" /></div>
             <div class="p-2">{{ empty($task->dateDone) ? '-' : date('d.m.Y',strtotime($task->dateDone)) }}</div>
         </div>
         @endif
