@@ -27,6 +27,7 @@ class extends Component
     public $showEdit = false;
     public $showDelete = false;
     public $editId = 0;
+    public $search = '';
 
     public RoleEditForm $editForm;
 
@@ -39,13 +40,20 @@ class extends Component
 
     }
 
+    public function setRoles()
+    {
+        if (strlen($this->search)>2) $this->roles = Role::where('name','LIKE','%'.$this->search.'%')->orderBy($this->sortField,$this->sortDirection)->get();
+        else $this->roles = Role::orderBy($this->sortField,$this->sortDirection)->get();
+    }
+
     public function sortBy($field)
     {
         $this->sortDirection = $this->sortField === $field
                         ? $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc'
                         : 'asc';
         $this->sortField = $field;
-        $this->roles = Role::orderBy($this->sortField,$this->sortDirection)->get();
+        $this->setRoles();
+
     }
 
     public function setRole(Role $role)
@@ -90,7 +98,7 @@ class extends Component
 
         $this->dispatch('banner-message', style:'success', message: $message);
 
-        $this->roles = Role::orderBy($this->sortField,$this->sortDirection)->get();
+        $this->setRoles();
         $this->closeCreate();
     }
 
@@ -123,7 +131,7 @@ class extends Component
 
         $this->dispatch('banner-message', style:'danger', message: $message);
 
-        $this->roles = Role::orderBy($this->sortField,$this->sortDirection)->get();
+        $this->setRoles();
         $this->closeDelete();
     }
 
@@ -146,6 +154,10 @@ class extends Component
 
         if ($key=="selectPermission") {
             $this->updateSelectedPermission($this->editForm->selectPermission);
+        }
+
+        if ($index=='search') {
+            $this->setRoles();
         }
 
     }
@@ -171,16 +183,26 @@ class extends Component
             <div class="p-4 text-gray-900 dark:text-gray-100">
                 <x-table>
                     <x-slot name="header">
-                        <x-table.head class="hidden">ID</x-table.head>
+                        <x-table.head rowspan=2 class="hidden">ID</x-table.head>
                         <x-table.head class="inline-block"
                                 sortable
                                 wire:click="sortBy('name')"
                                 :direction="$sortField === 'name' ? $sortDirection : null">
                                 {{ __('Role Name') }}
                         </x-table.head>
-                        <x-table.head class="block">{{ __('Role Permissions') }}</x-table.head>
-                        <x-table.head class="block">{{ __('Action') }}</x-table.head>
+                        <x-table.head rowspan=2 class="block">{{ __('Role Permissions') }}</x-table.head>
+                        <x-table.head rowspan=2 class="block">{{ __('Action') }}</x-table.head>
                         </tr>
+                    </x-slot>
+                    <x-slot name="searching">
+                        <x-table.head>
+                            <div class="flex">
+                                <x-input.text class="py-0 px-1 text-sm font-medium" wire:model.live="search" placeholder="Фильтр по названию.." />
+                                @if (!empty($search))
+                                <x-button.icon-cancel wire:click="$set('search', '')" title="Отменить" />
+                                @endif
+                            </div>    
+                        </x-table.head>
                     </x-slot>
                     @forelse ($roles as $role)
                     <x-table.row>
