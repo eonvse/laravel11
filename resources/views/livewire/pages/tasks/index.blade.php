@@ -158,9 +158,9 @@ $perform=function($taskId)
                     @endif
                 </div>
                 <div class="grow relative overflow-x-auto p-1">
-                    <div class="flex">
+                    <div class="flex" x-on:mouseover="$wire.resetInfo()">
                         @can('task.create')
-                        <div class="p-2 border-r" x-on:mouseover="$wire.resetInfo()">
+                        <div class="p-2 border-r">
                             <x-button.create wire:click="openCreate">{{ __('Add New Task') }}</x-button.create>
                         </div>
                         @endcan
