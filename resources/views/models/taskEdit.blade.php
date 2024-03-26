@@ -1,6 +1,6 @@
-<x-app-layout :title="__('Task edit')">
+<x-app-layout>
     <x-slot:title>
-		{{ __('Edit Task') }}
+		{{ __('Task') }}:{{ $task->name }}
 	</x-slot>
 
     <x-slot name="header">
@@ -18,7 +18,16 @@
                         <div class="row-span-2 border p-2 bg-neutral-200">
                             <livewire:pages.tasks.edit-content :$task />
                         </div>
-                        <div class="min-h-40 border p-2">Заметки + livewire button</div>
+                        <div class="min-h-40 border">
+                            <div class="shadow p-2 font-semibold">{{ __('Notes') }} + livewire button</div>
+                            <div class="p-2">
+                            @foreach ($notes as $note)
+                                {{ $note->created }}
+                                {{ $note->note }} 
+                                {{ $note->autor->name }}                               
+                            @endforeach
+                            </div>
+                        </div>
                         <div class="min-h-40 border p-2">Events</div>
                         <div class="min-h-40 border p-2">Файлы + livewire button</div>
                         <div class="min-h-40 border p-2">
