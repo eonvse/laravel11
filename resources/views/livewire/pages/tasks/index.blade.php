@@ -21,7 +21,6 @@ state(['colors','tasksList','filter']);
 state([
     'sortField' => 'created_at',
     'sortDirection' => 'desc',
-    'filter' => null,
     'showCreate' => false,
     'showDelete' =>false,
     'delRecord' => null,
@@ -113,8 +112,8 @@ $perform=function($taskId)
         Tasks::perform($taskId);
         $this->tasksList = Tasks::wire_list($this->sortField,$this->sortDirection,$this->filter)->get();
     }
-    else 
-        $this->dispatch('banner-message', style:'danger', message: 'Недостаточно прав'); 
+    else
+        $this->dispatch('banner-message', style:'danger', message: 'Недостаточно прав');
 }
 
 
@@ -170,7 +169,7 @@ $perform=function($taskId)
                         @endcan
                         <div class="p-2 flex">
                             <div class="p-1 flex-none">{{ __('Task filter') }}</div>
-                            <x-input.select-status :items="$statuses" wire:model="filter.status"/></div>
+                            <x-input.select-status :items="$statuses" wire:model.live="filter.status"/></div>
                     </div>
                     <x-table>
                         <x-slot name="header">
