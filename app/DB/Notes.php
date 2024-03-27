@@ -16,13 +16,31 @@ use App\Models\Note;
 class Notes
 {
 
-    public static function get($model,$modelId)
+    private static function getTypeId($type)
     {
-        $typeId = DB::table('types')->where('model','=',$model)->get('id')->first()->id;
+        return DB::table('types')->where('model','=',$type)->get('id')->first()->id;
+    }
+
+    public static function get($type,$item)
+    {
+        $typeId = self::getTypeId($type);
         //if paginate then delete ->get()
-        $notes = Note::where('type_id','=',$typeId)->where('item_id','=',$modelId)->orderBy('created_at','desc')->get(); 
+        $notes = Note::where('type_id','=',$typeId)->where('item_id','=',$item)->orderBy('created_at','desc')->get(); 
 
         return $notes;
+    }
+
+    public static function create($type,$item,$note)
+    {
+        $data =[
+            'parent_id' => 0,
+            'autor_id' => Auth::id(),
+            'type_id' => self::getTypeId($type),
+            'item_id' => $item,
+            'note' => trim($note)
+        ];
+
+        Note::create($data);
     }
     
 }

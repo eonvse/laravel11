@@ -14,7 +14,7 @@ Route::middleware('auth', 'verified')->group(function () {
     ->name('tasks');
 
     Route::get('/tasks/{task}/{editable?}', [\App\Http\Controllers\ModelController::class,'taskEdit'])
-    ->middleware(['permission:task.edit'])
+    ->middleware(['permission:task.view|task.edit'])
     ->name('tasks.edit');
 
 

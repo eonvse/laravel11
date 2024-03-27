@@ -18,16 +18,11 @@
                         <div class="row-span-2 border p-2 bg-neutral-200">
                             <livewire:pages.tasks.edit-content :$task />
                         </div>
+                        @can('note.view')
                         <div class="min-h-40 border">
-                            <div class="shadow p-2 font-semibold">{{ __('Notes') }} + livewire button</div>
-                            <div class="p-2">
-                            @foreach ($notes as $note)
-                                {{ $note->created }}
-                                {{ $note->note }} 
-                                {{ $note->autor->name }}                               
-                            @endforeach
-                            </div>
+                            <livewire:pages.modules.notes type="tasks" :item="$task->id" />
                         </div>
+                        @endcan
                         <div class="min-h-40 border p-2">Events</div>
                         <div class="min-h-40 border p-2">Файлы + livewire button</div>
                         <div class="min-h-40 border p-2">

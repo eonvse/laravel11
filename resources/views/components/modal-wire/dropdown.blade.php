@@ -19,7 +19,7 @@ $maxWidth = [
     x-on:keydown.escape.window="show = false"
     x-show="show"
     id="{{ $id }}"
-    class="fixed overflow-y-auto z-50 my-1"
+    class="absolute overflow-y-auto z-50 my-1"
     style="display: none;"
 >
     <div x-show="show" class="bg-neutral-300 p-1 overflow-hidden shadow-xl transform transition-all sm:w-full {{ $maxWidth }} sm:mx-auto dark:bg-gray-500 rounded p-2"

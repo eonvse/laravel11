@@ -58,7 +58,9 @@ $saveContent = function (){
                 <x-button.icon-ok title="{{ __('Save') }} " />
                 <x-button.icon-cancel type="button" wire:click="closeContent" title="{{ __('Cancel') }}" />
             @else
+                @can('task.edit')
                 <x-button.icon-edit type="button" wire:click="openContent" title="{{ __('Edit') }}"/>
+                @endcan
             @endif
         </div>
 

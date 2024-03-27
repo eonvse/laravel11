@@ -109,8 +109,12 @@ $resetInfo=function()
 
 $perform=function($taskId)
 {
-    Tasks::perform($taskId);
-    $this->tasksList = Tasks::wire_list($this->sortField,$this->sortDirection,$this->filter)->get();
+    if (Auth::user()->can('task.edit')) {
+        Tasks::perform($taskId);
+        $this->tasksList = Tasks::wire_list($this->sortField,$this->sortDirection,$this->filter)->get();
+    }
+    else 
+        $this->dispatch('banner-message', style:'danger', message: 'Недостаточно прав'); 
 }
 
 

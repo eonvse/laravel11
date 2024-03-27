@@ -78,8 +78,12 @@ $destroy = function(){
 
 $perform=function($taskId)
 {
-    Tasks::perform($taskId);
-    $this->task = Tasks::get($taskId);
+    if (Auth::user()->can('task.edit')) {
+        Tasks::perform($taskId);
+        $this->task = Tasks::get($taskId);
+    }
+    else 
+        $this->dispatch('banner-message', style:'danger', message: 'Недостаточно прав'); 
 };
 
 ?>
@@ -165,7 +169,9 @@ $perform=function($taskId)
         </div>
         @else
         <div class="flex justify-center items-center">
-            <x-button.icon-edit type="button" wire:click='openEdit' title="{{ __('Edit') }}" />
+            @can('task.edit')
+                <x-button.icon-edit type="button" wire:click='openEdit' title="{{ __('Edit') }}" />
+            @endcan
             @can('task.delete')
                 <x-button.icon-del type="button" title="{{ __('Delete') }}" wire:click="showDelete" />
             @endcan
