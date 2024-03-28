@@ -30,6 +30,14 @@ class Notes
         return $notes;
     }
 
+    public static function getCount($type,$item)
+    {
+        $typeId = self::getTypeId($type);
+        $count = Note::where('type_id','=',$typeId)->where('item_id','=',$item)->count();
+        
+        return $count;
+    }
+
     public static function create($type,$item,$note)
     {
         $data =[

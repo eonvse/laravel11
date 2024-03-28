@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use App\DB\Notes;
+
 class Task extends Model
 {
     protected $fillable = [ 'name',
@@ -18,6 +20,10 @@ class Task extends Model
                             'isDone',
                             'dateDone',];
     protected $primaryKey = 'id';
+
+    protected $appends =['created','updated','dayFormat','startFormat','endFormat','notesCount','dateDoneFormat'];
+
+    protected $visible = ['name','dayFormat','startFormat','endFormat','content','notesCount','dateDoneFormat','created','updated'];
 
         //---------------------------------------------------------
         //            GET ATTRIBUTES
@@ -59,6 +65,20 @@ class Task extends Model
         if (empty($this->end)) return $this->end;
         else return date('H:i', strtotime($this->end));
 
+    }
+
+    public function getDateDoneFormatAttribute()
+    {
+
+        if (empty($this->dateDone)) return $this->dateDone;
+        else return date('d.m.Y', strtotime($this->dateDone));
+
+    }
+
+
+    public function getNotesCountAttribute()
+    {
+        return Notes::getCount('tasks',$this->id);
     }
 
         //---------------------------------------------------------

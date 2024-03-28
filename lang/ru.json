@@ -1,4 +1,5 @@
 {
+    "by":"от",
     "Not Found":"Страница не найдена",
     "Forbidden":"Нет доступа",
     "User does not have the right permissions.":"Пользователь не имеет нужных разрешений.",
@@ -122,6 +123,7 @@
     "Clear field":"Очистить",
     "isDone":"Выполнено",
     "dateDone":"Дата выполнения",
-    "Task filter":"Показать"
+    "Task filter":"Показать",
+    "Notes Count":"Заметок"
 
 }

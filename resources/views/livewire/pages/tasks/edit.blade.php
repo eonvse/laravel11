@@ -97,6 +97,7 @@ $perform=function($taskId)
             <div>{{ __('Autor') }}</div>
         </div>
         @if ($editable)
+        @can('task.edit')
         <div class="sm:grid sm:grid-cols-6 font-medium items-center border-b border-neutral-400 border-dashed">
             <div class="col-span-3 p-1">
                 <x-input.text wire:model='form.nameTask' />
@@ -138,6 +139,7 @@ $perform=function($taskId)
             <div class="p-1 col-span-2"><x-marker.check :value="$task->isDone" type="form" wire:click="perform({{ $task->id }})" /></div>
             <div class="p-1">{{ empty($task->dateDone) ? '-' : date('d.m.Y',strtotime($task->dateDone)) }}</div>
         </div>
+        @endcan
         @else
         <div class="sm:grid sm:grid-cols-6 font-medium items-center border-b border-neutral-400 border-dashed">
             <div class="col-span-3">{{ $task->name }}</div>
@@ -150,7 +152,7 @@ $perform=function($taskId)
             <div class="p-2">{{ empty($task->start) ? '-' : $task->start_format }}</div>
             <div class="p-2">{{ empty($task->end) ? '-' : $task->end_format }}</div>
             <div class="p-2 col-span-2"><x-marker.check :value="$task->isDone" type="form" wire:click="perform({{ $task->id }})" /></div>
-            <div class="p-2">{{ empty($task->dateDone) ? '-' : date('d.m.Y',strtotime($task->dateDone)) }}</div>
+            <div class="p-2">{{ empty($task->dateDone) ? '-' : $task->dateDoneFormat }}</div>
         </div>
         @endif
         <div class="sm:grid sm:grid-cols-6 text-center text-sm text-neutral-600">
@@ -163,10 +165,12 @@ $perform=function($taskId)
     </div>
     <div class="grid items-center p-2">
         @if ($editable)
+        @can('task.edit')
         <div class="flex justify-center items-center">
             <x-button.icon-ok type="submit" title="{{ __('Save') }}" />
             <x-button.icon-cancel type="button" wire:click='cancelEdit' title="{{ __('Cancel') }}" />
         </div>
+        @endcan
         @else
         <div class="flex justify-center items-center">
             @can('task.edit')

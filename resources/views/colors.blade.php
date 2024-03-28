@@ -37,10 +37,11 @@
                 <div class="mt-5">
                     Markers
                     <div>
-                        <span class="bg-yellow-200 text-black m-2 p-1 rounded">yellow-200</span>
-                        <span class="bg-sky-200 text-black m-2 p-1 rounded">sky-200</span>
-                        <span class="bg-green-200 text-black m-2 p-1 rounded">green-200</span>
-
+                        <span class="bg-yellow-200 text-black m-2 p-1 rounded">role</span>
+                        <span class="bg-sky-200 text-black m-2 p-1 rounded">task</span>
+                        <span class="bg-green-200 text-black m-2 p-1 rounded">user</span>
+                        <span class="bg-orange-100 text-black m-2 p-1 rounded">note</span>
+                        
                     </div>
                 </div>
                 </div>

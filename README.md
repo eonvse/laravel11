@@ -37,6 +37,21 @@ php artisan db:seed --class=SuperAdminSeeder
 
 <img src='README.img/roles.edit.png' />
 
+Маркеры разрешений:
+>    'default' => 'bg-blue-500 text-white',
+>    'role' => 'bg-yellow-200 text-black',
+>    'task' => 'bg-sky-200 text-black',
+>    'user' => 'bg-green-200 text-black',
+>    'note' => 'bg-orange-100 text-black',
+
+Маркеры ролей:
+>    'default' => 'bg-blue-500 text-white',
+>    'Roles' => 'bg-yellow-200 text-black',
+>    'Tasks' => 'bg-sky-200 text-black',
+>    'Users' => 'bg-green-200 text-black',
+>    'Notes' => 'bg-orange-100 text-black',
+
+
 ### Сопровождение
 
 * Re-authenticate with GitHub. 

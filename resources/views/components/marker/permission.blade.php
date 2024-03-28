@@ -7,6 +7,7 @@ $types = [
     'role' => 'bg-yellow-200 text-black',
     'task' => 'bg-sky-200 text-black',
     'user' => 'bg-green-200 text-black',
+    'note' => 'bg-orange-100 text-black',
 ];
 $css = isset($types[$type]) ? $types[$type] : $types['default'];
 @endphp

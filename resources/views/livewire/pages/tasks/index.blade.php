@@ -136,26 +136,30 @@ $perform=function($taskId)
                     @if (is_array($taskInfo))
                         <div>{{ __('Task name') }}</div>
                         <div class="text-black font-medium border-b">{{ $taskInfo['name'] }}</div>
-                        @isset($taskInfo['day'])
+                        @isset($taskInfo['dayFormat'])
                         <div>{{ __('Event Day') }}</div>
-                        <div class="text-black font-medium border-b">{{ date('d.m.Y', strtotime($taskInfo['day'])) }}</div>
+                        <div class="text-black font-medium border-b">{{ $taskInfo['dayFormat'] }}</div>
                         @endisset
-                        @isset($taskInfo['start'])
+                        @isset($taskInfo['startFormat'])
                         <div>{{ __('Start') }}</div>
-                        <div class="text-black font-medium border-b">{{ date('H:i', strtotime($taskInfo['start'])) }}</div>
+                        <div class="text-black font-medium border-b">{{ $taskInfo['startFormat'] }}</div>
                         @endisset
-                        @isset($taskInfo['end'])
+                        @isset($taskInfo['endFormat'])
                         <div>{{ __('End') }}</div>
-                        <div class="text-black font-medium border-b">{{ date('H:i', strtotime($taskInfo['end'])) }}</div>
+                        <div class="text-black font-medium border-b">{{ $taskInfo['endFormat'] }}</div>
                         @endisset
                         @isset($taskInfo['content'])
                         <div>{{ __('Task content') }}</div>
                         <div class="text-black font-medium border-b">{!! $taskInfo['content'] !!}</div>
                         @endisset
-                        @isset($taskInfo['dateDone'])
+                        @isset($taskInfo['dateDoneFormat'])
                         <div>{{ __('dateDone') }}</div>
-                        <div class="text-black font-medium border-b">{{ date('d.m.Y', strtotime($taskInfo['dateDone'])) }}</div>
+                        <div class="text-black font-medium border-b">{{ $taskInfo['dateDoneFormat'] }}</div>
                         @endisset
+                        @if ($taskInfo['notesCount']>0)
+                        <div>{{ __('Notes Count') }}</div>
+                        <div class="text-black font-medium border-b">{{ $taskInfo['notesCount'] }}</div>
+                        @endif
                     @else
                         Для отображения информации наведите указателем мыши на задачу.
                     @endif
