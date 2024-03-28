@@ -4,19 +4,25 @@ use App\DB\Tasks;
 use App\Models\Color;
 
 use App\Livewire\Forms\TaskCreateForm;
+use Livewire\WithoutUrlPagination;
 
 use Illuminate\Support\Facades\Auth;
 //use Illuminate\Support\Facades\Log;
 //Log::debug('selectedPermissions = ' . implode(',',$this->selectedPermissions));
 //Log::notice('---Volt Roles---');
 
-use function Livewire\Volt\{layout, state, title, mount, form, updated};
+use function Livewire\Volt\{layout, state, title, mount, form, updated,with, usesPagination, uses};
 
 layout('layouts.app');
 
 title(fn () => __('Tasks'));
 
-state(['colors','tasksList','filter']);
+usesPagination();
+uses(WithoutUrlPagination::class);
+ 
+with(fn () => ['tasksList' => Tasks::wire_list($this->sortField,$this->sortDirection,$this->filter)->paginate(10)]);
+
+state(['colors','filter']);
 
 state([
     'sortField' => 'created_at',
@@ -33,10 +39,9 @@ form(TaskCreateForm::class);
 mount(function() {
     $this->colors = Color::orderBy('base')->get()->toArray();
     $this->filter = ['status'=>0];
-    $this->tasksList = Tasks::wire_list($this->sortField,$this->sortDirection,$this->filter)->get();
 });
 
-updated(['filter.status' => fn () => $this->tasksList = Tasks::wire_list($this->sortField,$this->sortDirection,$this->filter)->get() ]);
+updated(['filter.status' => fn () => $this->resetPage()]);
 
 $sortBy = function($field)
 {
@@ -45,7 +50,6 @@ $sortBy = function($field)
                         : 'asc';
 
     $this->sortField = $field;
-    $this->tasksList = Tasks::wire_list($this->sortField,$this->sortDirection,$this->filter)->get();
 };
 
 $openCreate = function()
@@ -68,8 +72,8 @@ $save = function()
 
     $this->dispatch('banner-message', style:'success', message: $message);
 
-    $this->tasksList = Tasks::wire_list($this->sortField,$this->sortDirection,$this->filter)->get();
     $this->closeCreate();
+    $this->resetPage();
 
 };
 
@@ -91,8 +95,8 @@ $destroy=function($task_id)
     Tasks::delete($task_id);
     $this->closeDelete();
     $this->dispatch('banner-message', style:'danger', message: $message);
-    $this->tasksList = Tasks::wire_list($this->sortField,$this->sortDirection,$this->filter)->get();
     $this->resetInfo();
+    $this->resetPage();
 
 };
 
@@ -108,10 +112,8 @@ $resetInfo=function()
 
 $perform=function($taskId)
 {
-    if (Auth::user()->can('task.edit')) {
+    if (Auth::user()->can('task.edit')) 
         Tasks::perform($taskId);
-        $this->tasksList = Tasks::wire_list($this->sortField,$this->sortDirection,$this->filter)->get();
-    }
     else
         $this->dispatch('banner-message', style:'danger', message: 'Недостаточно прав');
 }
@@ -233,7 +235,7 @@ $perform=function($taskId)
                             </x-table.row>
                         @endforelse
                     </x-table>
-                    <div class="m-2"> $list->links() </div>
+                    <div class="m-2"> {{ $tasksList->links() }} </div>
                 </div>
             </div>
             </div>
@@ -321,6 +323,8 @@ $perform=function($taskId)
     <x-spinner wire:loading wire:target="openDelete" />
     <x-spinner wire:loading wire:target="closeDelete" />
     <x-spinner wire:loading wire:target="destroy" />
-
+    <x-spinner wire:loading wire:target="gotoPage" />
+    <x-spinner wire:loading wire:target="previousPage" />
+    <x-spinner wire:loading wire:target="nextPage" />
 
 </div>
