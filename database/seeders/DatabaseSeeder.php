@@ -17,8 +17,8 @@ class DatabaseSeeder extends Seeder
             ColorsSeeder::class,
             PermissionSeeder::class,
             PermissionTaskSeeder::class,
-            //PermissionNoteSeeder::class,
-            //TypeSeeder::class,
+            PermissionNoteSeeder::class,
+            TypeSeeder::class,
         ]);
     }
 }

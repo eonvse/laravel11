@@ -21,11 +21,16 @@ class Notes
         return DB::table('types')->where('model','=',$type)->get('id')->first()->id;
     }
 
-    public static function get($type,$item)
+    public static function get($id)
+    {
+        return Note::find($id);
+    }
+
+    public static function getList($type,$item)
     {
         $typeId = self::getTypeId($type);
         //if paginate then delete ->get()
-        $notes = Note::where('type_id','=',$typeId)->where('item_id','=',$item)->orderBy('created_at','desc')->get(); 
+        $notes = Note::where('type_id','=',$typeId)->where('item_id','=',$item)->orderBy('created_at','desc'); 
 
         return $notes;
     }
@@ -49,6 +54,11 @@ class Notes
         ];
 
         Note::create($data);
+    }
+
+    public static function delete($id)
+    {
+        Note::find($id)->delete();
     }
     
 }

@@ -58,6 +58,8 @@ php artisan db:seed --class=SuperAdminSeeder
 ```
 gh auth login
 ```
+* git config core.filemode false 
+
 
 ### Авторские права:
 * Фреймворки

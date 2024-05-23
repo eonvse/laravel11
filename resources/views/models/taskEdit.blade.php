@@ -19,7 +19,7 @@
                             <livewire:pages.tasks.edit-content :$task />
                         </div>
                         @can('note.view')
-                        <div class="min-h-40 border">
+                        <div class="min-h-40 border relative">
                             <livewire:pages.modules.notes type="tasks" :item="$task->id" />
                         </div>
                         @endcan
