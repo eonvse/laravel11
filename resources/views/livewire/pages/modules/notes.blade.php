@@ -41,7 +41,6 @@ $saveNote = function() {
 
     Notes::create($this->type,$this->item,$this->addNote);
     $this->closeAddNote();
-    $this->getNotes();
 
     $message = "Заметка добавлена.";
     $this->dispatch('banner-message', style:'success', message: $message);
