@@ -6,12 +6,12 @@ use Livewire\WithoutUrlPagination;
 
 use Illuminate\Support\Facades\Log;
 
-use function Livewire\Volt\{state,mount,updated,with,usesPagination,uses};
-
-state(['type','item','delNote']);
+use function Livewire\Volt\{state,mount,with,usesPagination,uses};
 
 usesPagination();
 uses(WithoutUrlPagination::class);
+
+state(['type','item','delNote']);
 
 state([
     'showAddNote' => false,
@@ -26,12 +26,7 @@ with(fn () => ['notes' => Notes::getList($this->type,$this->item)->simplePaginat
 mount(function($type,$item){
     $this->type = $type;
     $this->item = $item;
-    //$this->getNotes();
 });
-
-$getNotes = function(){
-    $this->notes = Notes::get($this->type,$this->item);
-};
 
 $openAddNote = function() {
     $this->showAddNote = true;
@@ -59,12 +54,12 @@ $setPerPage = function($value){
 
 $openDeleteNote = function($idNote){
     $this->showDeleteNote = true;
-    $this->delNote = Notes::get($idNote);    
+    $this->delNote = Notes::get($idNote);
 };
 
 $closeDeleteNote = function(){
     $this->showDeleteNote = false;
-    $this->delNote = '';    
+    $this->delNote = '';
 };
 
 $destroy = function($idNote){

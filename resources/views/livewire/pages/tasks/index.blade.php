@@ -19,7 +19,7 @@ title(fn () => __('Tasks'));
 
 usesPagination();
 uses(WithoutUrlPagination::class);
- 
+
 with(fn () => ['tasksList' => Tasks::wire_list($this->sortField,$this->sortDirection,$this->filter)->paginate(10)]);
 
 state(['colors','filter']);
@@ -112,7 +112,7 @@ $resetInfo=function()
 
 $perform=function($taskId)
 {
-    if (Auth::user()->can('task.edit')) 
+    if (Auth::user()->can('task.edit'))
         Tasks::perform($taskId);
     else
         $this->dispatch('banner-message', style:'danger', message: 'Недостаточно прав');
@@ -137,7 +137,7 @@ $perform=function($taskId)
                 <div class="hidden md:block p-3 md:w-[200px] lg:w-[300px] text-gray-500">
                     @if (is_array($taskInfo))
                         <div>{{ __('Task name') }}</div>
-                        <div class="text-black font-medium border-b">{{ $taskInfo['name'] }}</div>
+                        <div class="text-black font-medium border-b text-center">{{ $taskInfo['name'] }}</div>
                         @isset($taskInfo['dayFormat'])
                         <div>{{ __('Event Day') }}</div>
                         <div class="text-black font-medium border-b">{{ $taskInfo['dayFormat'] }}</div>
@@ -163,7 +163,9 @@ $perform=function($taskId)
                         <div class="text-black font-medium border-b">{{ $taskInfo['notesCount'] }}</div>
                         @endif
                     @else
-                        Для отображения информации наведите указателем мыши на задачу.
+                        <div class="">
+                            Для отображения информации по задаче нажмите на значок <x-link.icon-show  class="inline-block" /> напротив нужной задачи.
+                        </div>
                     @endif
                 </div>
                 <div class="grow relative overflow-x-auto p-1">
@@ -201,12 +203,13 @@ $perform=function($taskId)
                             <x-table.head class="inline-block">{{ __('Autor') }}</x-table.head>
                         </x-slot>
                         @forelse ($tasksList as $task)
-                            <x-table.row wire:key="{{ $task->id }}" x-on:mouseover="$wire.infoTask({{ $task->id }})" >
+                            <x-table.row wire:key="{{ $task->id }}">
                                 <x-table.cell class="block">
                                     <div class="relative items-center">
                                         <div class="flex">
                                             @can('task.edit')
                                             <div class="flex items-center">
+                                                <x-link.icon-show wire:click="infoTask({{ $task->id }})" />
                                                 <x-link.icon-edit href="{{ route('tasks.edit', ['task'=>$task, 'editable'=>1]) }}" title="{{ __('Edit') }}" />
                                                 @can('task.delete')
                                                 <x-button.icon-del  wire:click="openDelete({{ $task->id }})"/>
