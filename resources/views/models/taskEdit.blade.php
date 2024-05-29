@@ -4,9 +4,14 @@
 	</x-slot>
 
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Edit Task') }}
+        <div class="flex">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight text-right p-1">
+            {{ __('Edit Task') }}:
         </h2>
+        <div class="font-semibold border {{ $task->color->base }} p-1 rounded">
+            <div class="bg-white m-2 text-center rounded-lg">{{ $task->name }}</div>
+        </div>
+        </div>
     </x-slot>
 
     <div class="py-3">

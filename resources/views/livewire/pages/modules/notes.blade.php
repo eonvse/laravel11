@@ -19,6 +19,7 @@ state([
     'addNote' => '',
     'per_page' => 5, // количество отображаемых заметок
     'per_pages' => [3,5,10,15], // варианты разбиок по количеству
+    'edit_note_id' => 0,
 ]);
 
 with(fn () => ['notes' => Notes::getList($this->type,$this->item)->simplePaginate($this->per_page)]);
@@ -87,7 +88,11 @@ $destroy = function($idNote){
     @can('note.create')
     <x-modal-wire.dropdown-r wire:model="showAddNote" maxWidth="sm">
         <form wire:submit="saveNote" class="flex-col space-y-2">
-            <div><x-input.textarea wire:model="addNote" required /></div>
+            <div>
+                <x-input.div-editable editable="true" wire:model="addNote">
+                    {!! $addNote !!}
+                </x-input.div-editable>
+            </div>
            	<x-button.create class="text-sm" type="submit">{{ __('Add') }}</x-button.create>
             <x-button.secondary class="text-sm" wire:click="closeAddNote()">{{ __('Cancel') }}</x-button.secondary>
         </form>
@@ -95,20 +100,26 @@ $destroy = function($idNote){
     @endcan
     <div class="p-2 tabular-nums text-sm">
         @foreach ($notes as $note)
-        <div class="flex items-center">
-            <div class="py-1 border-b grow">
+        <div class="flex items-center justify-center border-b border-gray-300 p-[2px]">
+            <div class="py-1 grow">
                 <div>{{ $note->created }} {{ __('by') }} {{ $note->autor->name }}</div>
-                <div>{!! nl2br(e($note->note)) !!}</div>
+                <div>{!! $note->note !!}</div>
             </div>
-            @can('note.delete')
-            <div>
+
+            <div class="flex items-center">
+                @can('note.edit')
+                <x-button.icon-edit wire:click="openDeleteNote({{ $note->id }})" />
+                @endcan
+
+                @can('note.delete')
                 <x-button.icon-del wire:click="openDeleteNote({{ $note->id }})" />
+                @endcan
             </div>
-            @endcan
         </div>
         @endforeach
         <div class="mt-1"> {{ $notes->links('vendor/livewire/simple-notes') }} </div>
     </div>
+
     @can('note.delete')
     <x-modal-wire.dialog wire:model="showDeleteNote" maxWidth="md" type="warn">
         <x-slot name="title">
@@ -126,8 +137,8 @@ $destroy = function($idNote){
             </div>
         </x-slot>
     </x-modal-wire.dialog>
-
     @endcan
+
     <x-spinner wire:loading wire:target="getNotes" />
     <x-spinner wire:loading wire:target="openAddNote" />
     <x-spinner wire:loading wire:target="closeAddNote" />
