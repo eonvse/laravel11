@@ -14,13 +14,13 @@ uses(WithoutUrlPagination::class);
 state(['type','item','delNote']);
 
 state([
-    'showAddNote' => false,
-    'showDeleteNote' => false,
-    'addNote' => '',
-    'editNote' => '',
-    'per_page' => 5, // количество отображаемых заметок
-    'per_pages' => [3,5,10,15], // варианты разбиок по количеству
-    'edit_note_id' => 0,
+    'showAddNote' => false,     //отображение окна добавления
+    'showDeleteNote' => false,  //отображение окна удаления
+    'addNote' => '',            // новая заметка
+    'per_page' => 5,            // количество отображаемых заметок
+    'per_pages' => [3,5,10,15], // варианты разбивок по количеству
+    'edit_note_id' => 0,        // id редактируемой заметки   
+    'editNote' => '',           //текст редактируемой заметки
 ]);
 
 with(fn () => ['notes' => Notes::getList($this->type,$this->item)->simplePaginate($this->per_page)]);
