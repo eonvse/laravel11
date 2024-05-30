@@ -60,5 +60,10 @@ class Notes
     {
         Note::find($id)->delete();
     }
+
+    public static function setFieldValue($id, $field,$value) : void
+    {
+        Note::where('id','=',$id)->update([$field=>$value]);
+    }
     
 }

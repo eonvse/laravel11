@@ -17,6 +17,7 @@ state([
     'showAddNote' => false,
     'showDeleteNote' => false,
     'addNote' => '',
+    'editNote' => '',
     'per_page' => 5, // количество отображаемых заметок
     'per_pages' => [3,5,10,15], // варианты разбиок по количеству
     'edit_note_id' => 0,
@@ -70,6 +71,27 @@ $destroy = function($idNote){
     $this->resetPage();
 };
 
+$setEditNote = function(int $id){
+    $this->edit_note_id = $id;
+    $this->editNote = Notes::get($id)->note;
+};
+
+$cancelEdit = function(){
+    $this->edit_note_id = 0;
+    $this->editNote = '';
+};
+
+$saveEditNote = function($id){
+    
+    Notes::setFieldValue($id,'note',$this->editNote);
+
+    $message = "Заметка сохранена.";
+    $this->dispatch('banner-message', style:'success', message: $message);
+
+    $this->cancelEdit();
+
+};
+
 
 ?>
 
@@ -103,17 +125,30 @@ $destroy = function($idNote){
         <div class="flex items-center justify-center border-b border-gray-300 p-[2px]">
             <div class="py-1 grow">
                 <div>{{ $note->created }} {{ __('by') }} {{ $note->autor->name }}</div>
+                @if ($edit_note_id != $note->id)
                 <div>{!! $note->note !!}</div>
+                @else
+                <div class="flex items-center">
+                    <x-input.div-editable editable="true" wire:model="editNote">
+                        {!! $editNote !!}
+                    </x-input.div-editable>
+                </div>
+                @endif
             </div>
 
             <div class="flex items-center">
+            @if ($edit_note_id != $note->id)
                 @can('note.edit')
-                <x-button.icon-edit wire:click="openDeleteNote({{ $note->id }})" />
+                <x-button.icon-edit size=4 wire:click="setEditNote({{ $note->id }})" />
                 @endcan
 
                 @can('note.delete')
-                <x-button.icon-del wire:click="openDeleteNote({{ $note->id }})" />
+                <x-button.icon-del size=4 wire:click="openDeleteNote({{ $note->id }})" />
                 @endcan
+            @else
+                <x-button.icon-ok size=4 wire:click="saveEditNote({{ $note->id }})" />
+                <x-button.icon-cancel size=4 wire:click="cancelEdit"/>
+            @endif
             </div>
         </div>
         @endforeach
@@ -129,7 +164,7 @@ $destroy = function($idNote){
             <div class="flex-col space-y-2">
                 <x-input.label class="text-lg font-medium">Вы действительно хотите удалить заметку?
                     <div class="text-black dark:text-white flex items-center">
-                        <div>{!! nl2br(e($delNote->note ?? '')) !!}</div>
+                        <div>{!! $delNote->note ?? '' !!}</div>
                     </div>
                 </x-input.label>
                 <x-button.secondary wire:click="closeDeleteNote">{{ __('Cancel') }}</x-button.secondary>
@@ -146,4 +181,8 @@ $destroy = function($idNote){
     <x-spinner wire:loading wire:target="previousPage" />
     <x-spinner wire:loading wire:target="nextPage" />
     <x-spinner wire:loading wire:target="setPerPage" />
+    <x-spinner wire:loading wire:target="setEditNote" />
+    <x-spinner wire:loading wire:target="cancelEdit" />
+    <x-spinner wire:loading wire:target="saveEditNote" />
+
 </div>
