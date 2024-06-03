@@ -2,6 +2,7 @@
 
 use App\DB\Tasks;
 use App\Models\Color;
+use App\Events\TaskDelete;
 
 use App\Livewire\Forms\TaskCreateForm;
 use Livewire\WithoutUrlPagination;
@@ -91,10 +92,12 @@ $closeDelete=function()
 
 $destroy=function($task_id)
 {
-    $message = "Удалена задача: " . $this->delRecord->name;
-    Tasks::delete($task_id);
+    TaskDelete::dispatch(Tasks::get($task_id));
     $this->closeDelete();
+
+    $message = "Удалена задача: " . $this->delRecord->name;
     $this->dispatch('banner-message', style:'danger', message: $message);
+
     $this->resetInfo();
     $this->resetPage();
 

@@ -4,7 +4,7 @@
 	</x-slot>
 
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight overflow-hidden">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight overflow-hidden px-2 border-b-2 {{ str_replace('bg','border', $task->color->base) }}">
             {{ $task->name }}
         </h2>
     </x-slot>
