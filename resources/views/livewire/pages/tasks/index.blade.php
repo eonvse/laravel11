@@ -93,9 +93,10 @@ $closeDelete=function()
 $destroy=function($task_id)
 {
     TaskDelete::dispatch(Tasks::get($task_id));
-    $this->closeDelete();
 
     $message = "Удалена задача: " . $this->delRecord->name;
+    $this->closeDelete();
+
     $this->dispatch('banner-message', style:'danger', message: $message);
 
     $this->resetInfo();

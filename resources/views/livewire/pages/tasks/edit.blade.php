@@ -5,6 +5,8 @@ use App\Models\Color;
 
 use App\DB\Tasks;
 
+use App\Events\TaskDelete;
+
 use App\Livewire\Forms\TaskEditForm;
 
 use Illuminate\Support\Facades\Auth;
@@ -65,14 +67,15 @@ $closeDelete = function(){
 };
 
 $destroy = function(){
-    $this->task->delete();
+    
+    TaskDelete::dispatch($this->task);
     $this->delete = false;
 
     $message = "Удалена задача: " . $this->task->name;
     session()->flash('flash.banner', $message);
     session()->flash('flash.bannerStyle', 'danger');
 
-    $this->redirect('/tasks');
+    $this->redirectRoute('tasks');
 
 };
 
