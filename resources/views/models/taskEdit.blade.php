@@ -24,7 +24,11 @@
                         </div>
                         @endcan
                         <div class="min-h-40 border p-2">Events</div>
-                        <div class="min-h-40 border p-2">Файлы + livewire button</div>
+                        @can('file.view')
+                        <div class="min-h-40 border relative">
+                            <livewire:pages.modules.files type="tasks" :item="$task->id" />
+                        </div>
+                        @endcan
                         <div class="min-h-40 border p-2">
                             <p>Статистика (на подумать)...</p>
                             <p>Процесс выполнения ???</p>
