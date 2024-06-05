@@ -8,10 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class File extends Model
 {
     use HasFactory;
-    protected $fillable = ['name','url','autor_id','type_id','item_id','isLocal'];
+    protected $fillable = ['name','url','autor_id','type_id','item_id','local'];
     protected $primaryKey = 'id';
 
-    public function getCreatedAttribute() 
+    public function getCreatedAttribute()
     {
         return date('d.m.y H:i', strtotime($this->created_at));
     }

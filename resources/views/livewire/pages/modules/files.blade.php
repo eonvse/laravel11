@@ -9,27 +9,30 @@ usesFileUploads();
 state(['type','item', 'files']);
 
 state([
-    'showAddFile' => false,     //отображение окна добавления
+    'showAddFile' => false,     // отображение окна добавления
     'addFile' => '',            // новый файл
-    'showDeleteFile' => false,  //отображение окна удаления
-    'delFile' => '',
+    'showDeleteFile' => false,  // отображение окна удаления
+    'delFile' => '',            // удаляемый файл
     'per_page' => 5,            // количество отображаемых файлов
     'per_pages' => [3,5,10,15], // варианты разбивок по количеству
-    'isLocalFile' => true,
-    'webName' => '',
-    'webUrl' => '',
+    'isLocalFile' => true,      // признак локального файла, иначе веб адрес со своим именем
+    'webName' => '',            // имя ссылки
+    'webUrl' => '',             // адрес ссылки
 ]);
 
+// файлы по типу files и id при монтировании
 mount(function($type,$item){
     $this->type = $type;
     $this->item = $item;
     $this->files = Files::getList($type,$item)->get();
 });
 
+// открыть модальное окно добавления файла
 $openAddFile = function() {
     $this->showAddFile = true;
 };
 
+// закрыть добавление файла
 $closeAddFile = function() {
     $this->showAddFile = false;
     $this->addFile = $this->webName = $this->webUrl = '';
@@ -37,11 +40,14 @@ $closeAddFile = function() {
 
 };
 
+// сохранить файл/ссылку
 $saveFile = function() {
-    Files::create($this->type,$this->$item,$this->addFile,$this->webName,$this->webUrl);
+    Files::create($this->type,$this->item,$this->addFile,$this->webName,$this->webUrl);
 }
 
 ?>
+
+<!-- HTML МОДУЛЬ ФАЙЛЫ -->
 
 <div>
     <div class="shadow p-2 font-semibold flex items-center">
@@ -97,7 +103,7 @@ $saveFile = function() {
             </div>
         </div>
         @endforeach
-        
+
     </div>
 
     @can('file.delete')
@@ -118,7 +124,7 @@ $saveFile = function() {
         </x-slot>
     </x-modal-wire.dialog>
     @endcan
-    
+
     <x-spinner wire:loading wire:target="openAddFile" />
     <x-spinner wire:loading wire:target="closeAddFile" />
 
