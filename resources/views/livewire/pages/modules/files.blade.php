@@ -2,11 +2,15 @@
 
 use App\DB\Files;
 
-use function Livewire\Volt\{state,mount,usesFileUploads};
+use Livewire\WithoutUrlPagination;
 
+use function Livewire\Volt\{state,mount,with,uses,usesFileUploads,usesPagination};
+
+usesPagination();
+uses(WithoutUrlPagination::class);
 usesFileUploads();
 
-state(['type','item', 'files']);
+state(['type','item']);
 
 state([
     'showAddFile' => false,     //отображение окна добавления
@@ -20,10 +24,11 @@ state([
     'webUrl' => '',
 ]);
 
+with(fn () => ['files' => Files::getList($this->type,$this->item)->simplePaginate($this->per_page)]);
+
 mount(function($type,$item){
     $this->type = $type;
     $this->item = $item;
-    $this->files = Files::getList($type,$item)->get();
 });
 
 $openAddFile = function() {
@@ -38,8 +43,14 @@ $closeAddFile = function() {
 };
 
 $saveFile = function() {
-    Files::create($this->type,$this->$item,$this->addFile,$this->webName,$this->webUrl);
-}
+    Files::create($this->type,$this->item,$this->addFile,$this->webName,$this->webUrl);
+    $this->closeAddFile();
+};
+
+$setPerPage = function($value){
+    $this->per_page = $value;
+    $this->resetPage();
+};
 
 ?>
 
@@ -48,7 +59,7 @@ $saveFile = function() {
         <div class="grow">{{ __('Files') }}</div>
         <div class="flex space-x-1 px-1">
             @foreach($per_pages as $countItem)
-                <div class="px-1 border rounded cursor-pointer text-sm {{ $countItem==$per_page ? 'text-black' : 'text-gray-400' }}">{{ $countItem }}</div>
+                <div class="px-1 border rounded cursor-pointer text-sm {{ $countItem==$per_page ? 'text-black' : 'text-gray-400' }}" wire:click="setPerPage({{ $countItem }})">{{ $countItem }}</div>
             @endforeach
         </div>
         @can('file.create')
@@ -84,10 +95,9 @@ $saveFile = function() {
         @foreach ($files as $file)
         <div class="flex items-center justify-center border-b border-gray-300 p-[2px]">
             <div class="py-1 grow">
-                <div>{{ $file->created }} {{ __('by') }} {{ $file->autor->name }}</div>
-                @if ($edit_note_id != $note->id)
-                <div>{{ $file->name }}</div>
-                @endif
+                <x-link.table-cell href="{{ $file->isLocal ? url('storage/'.$file->url) : $file->url }}" target="_blank">
+                    {{ $file->name }}
+                </x-link.table-cell>
             </div>
 
             <div class="flex items-center">
@@ -97,7 +107,7 @@ $saveFile = function() {
             </div>
         </div>
         @endforeach
-        
+        <div class="mt-1"> {{ $files->links('vendor/livewire/simple-module') }} </div>
     </div>
 
     @can('file.delete')
@@ -109,7 +119,7 @@ $saveFile = function() {
             <div class="flex-col space-y-2">
                 <x-input.label class="text-lg font-medium">Вы действительно хотите удалить заметку?
                     <div class="text-black dark:text-white flex items-center">
-                        <div>{!! $delNote->note ?? '' !!}</div>
+                        <div>{!! $delFile->name ?? '' !!}</div>
                     </div>
                 </x-input.label>
                 <x-button.secondary >{{ __('Cancel') }}</x-button.secondary>
@@ -121,6 +131,10 @@ $saveFile = function() {
     
     <x-spinner wire:loading wire:target="openAddFile" />
     <x-spinner wire:loading wire:target="closeAddFile" />
+    <x-spinner wire:loading wire:target="saveFile" />
+    <x-spinner wire:loading wire:target="previousPage" />
+    <x-spinner wire:loading wire:target="nextPage" />
+    <x-spinner wire:loading wire:target="setPerPage" />
 
 
 </div>

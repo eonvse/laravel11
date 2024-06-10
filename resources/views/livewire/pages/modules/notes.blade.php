@@ -152,7 +152,7 @@ $saveEditNote = function($id){
             </div>
         </div>
         @endforeach
-        <div class="mt-1"> {{ $notes->links('vendor/livewire/simple-notes') }} </div>
+        <div class="mt-1"> {{ $notes->links('vendor/livewire/simple-module') }} </div>
     </div>
 
     @can('note.delete')
@@ -174,7 +174,6 @@ $saveEditNote = function($id){
     </x-modal-wire.dialog>
     @endcan
 
-    <x-spinner wire:loading wire:target="getNotes" />
     <x-spinner wire:loading wire:target="openAddNote" />
     <x-spinner wire:loading wire:target="closeAddNote" />
     <x-spinner wire:loading wire:target="saveNote" />

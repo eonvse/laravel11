@@ -5,6 +5,7 @@ namespace App\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 
 use App\Models\File;
@@ -47,18 +48,25 @@ class Files
     {
         $name = $webName;
         $url = $webUrl;
+        $isLocal = 0;
 
         if (!empty($file)) {
-
+            $patch = ''.$type.'/'.$item;
+            $name = $file->getClientOriginalName();
+            $nameLocal = Str::random(3).'_'.$name;
+            $isLocal = 1;
+            $url = $patch.'/'.$nameLocal;
+            $file->storeAs($patch,$nameLocal,'public');
         };
 
-        $data =[
-            'parent_id' => 0,
-            'autor_id' => Auth::id(),
-            'type_id' => self::getTypeId($type),
-            'item_id' => $item,
-            'note' => trim($note)
-        ];
+        $data = array(
+            'name'=>$name,
+            'url'=>$url,
+            'autor_id'=>Auth::id(),
+            'type_id'=>self::getTypeId($type),
+            'item_id'=>$item,
+            'isLocal'=>$isLocal 
+        );
 
         File::create($data);
     }
