@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class File extends Model
 {
     use HasFactory;
-    protected $fillable = ['name','url','autor_id','type_id','item_id','local'];
+    protected $fillable = ['name','url','autor_id','type_id','item_id','isLocal'];
     protected $primaryKey = 'id';
 
     public function getCreatedAttribute()

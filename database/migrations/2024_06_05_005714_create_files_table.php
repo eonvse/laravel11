@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('autor_id');
             $table->unsignedBigInteger('type_id');
             $table->unsignedBigInteger('item_id');
-            $table->boolean('local');
+            $table->boolean('isLocal');
             $table->timestamps();
         });
     }
