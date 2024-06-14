@@ -4,7 +4,7 @@ use App\DB\Files;
 
 use Livewire\WithoutUrlPagination;
 
-use function Livewire\Volt\{state,mount,with,uses,usesFileUploads,usesPagination};
+use function Livewire\Volt\{state,mount,with,uses,usesFileUploads,usesPagination,rules};
 
 usesPagination();
 uses(WithoutUrlPagination::class);
@@ -24,6 +24,8 @@ state([
     'webUrl' => '',             // адрес ссылки
 ]);
 
+rules(['webName' => 'nullable|min:5','webUrl' => 'nullable|url:http,https']);
+
 with(fn () => ['files' => Files::getList($this->type,$this->item)->simplePaginate($this->per_page)]);
 
 mount(function($type,$item){
@@ -39,17 +41,43 @@ $openAddFile = function() {
 // закрыть добавление файла
 $closeAddFile = function() {
     $this->showAddFile = false;
-    $this->addFile = $this->webName = $this->webUrl = '';
+    $this->webName = $this->webUrl = '';
+    $this->addFile = null;
     $this->isLocalFile = true;
 
 };
 
 // сохранить файл/ссылку
 $saveFile = function() {
+    $this->validate();
     Files::create($this->type,$this->item,$this->addFile,$this->webName,$this->webUrl);
     $this->closeAddFile();
+    $message = "Добавлено новое вложение.";
+    $this->dispatch('banner-message', style:'success', message: $message);
+
 };
 
+// открыть модальное окно удаления вложения
+$openDelFile = function($idFile) {
+    $this->showDeleteFile = true;
+    $this->delFile = Files::get($idFile);
+};
+
+// закрыть модальное окно удаления вложения
+$closeDelFile = function() {
+    $this->showDeleteFile = false;
+    $this->delFile = '';
+};
+
+// удаление записи из БД и загруженного файла (если есть)
+$destroy = function() {
+    Files::delete($this->delFile->id);
+    $message = "Вложение удалено";
+    $this->dispatch('banner-message', style:'danger', message: $message);
+    $this->closeDelFile();
+};
+
+// установить количество отображаемых в списке файлов
 $setPerPage = function($value){
     $this->per_page = $value;
     $this->resetPage();
@@ -78,20 +106,19 @@ $setPerPage = function($value){
             @if ($isLocalFile)
                 <div>
                     <input type="file" wire:model="addFile" class="text-sm">
-                    @error('addFile') <div class="text-red-500">{{ $message }}</div> @enderror
+                    @error('addFile') <x-error>{{ $message }}</x-error> @enderror
                 </div>
-                <div wire:loading wire:target="addFile">{{ __('Uploading...') }}</div>
             @else
                 <div>
-                    <x-input.label>Название</x-input.label>
+                    <x-input.label>{{ __('Web Name') }}</x-input.label>
                     <x-input.text wire:model.live="webName" required />
-                    @error('webName') <div class="text-red-500">{{ $message }}</div> @enderror
-                    <x-input.label>Url</x-input.label>
+                    @error('webName') <x-error>{{ $message }}</x-error> @enderror
+                    <x-input.label>{{ __('Web Url') }}</x-input.label>
                     <x-input.text wire:model.live="webUrl" required />
-                    @error('webUrl') <div class="text-red-500">{{ $message }}</div> @enderror
+                    @error('webUrl') <x-error>{{ $message }}</x-error> @enderror
                 </div>
             @endif
-        	<x-button.create class="text-sm" type="submit">{{ __('Add') }}</x-button.create>
+        	<x-button.create class="text-sm" type="submit" wire:loading.attr="disabled" wire:target="addFile">{{ __('Add') }}</x-button.create>
             <x-button.secondary class="text-sm" wire:click="closeAddFile">{{ __('Cancel') }}</x-button.secondary>
        	</form>
     </x-modal-wire.dropdown-r>
@@ -107,7 +134,7 @@ $setPerPage = function($value){
 
             <div class="flex items-center">
                 @can('file.delete')
-                <x-button.icon-del size=4  />
+                <x-button.icon-del size=4 wire:click="openDelFile({{ $file->id }})" />
                 @endcan
             </div>
         </div>
@@ -119,16 +146,16 @@ $setPerPage = function($value){
     <x-modal-wire.dialog wire:model="showDeleteFile" maxWidth="md" type="warn">
         <x-slot name="title">
             <span class="grow">{{ __('File delete') }}</span>
-            <x-button.icon-cancel  class="text-gray-700 hover:text-white dark:hover:text-white" /></x-slot>
+            <x-button.icon-cancel  class="text-gray-700 hover:text-white dark:hover:text-white" wire:click="closeDelFile" /></x-slot>
         <x-slot name="content">
             <div class="flex-col space-y-2">
-                <x-input.label class="text-lg font-medium">Вы действительно хотите удалить заметку?
+                <x-input.label class="text-lg font-medium">Вы действительно хотите удалить вложение?
                     <div class="text-black dark:text-white flex items-center">
-                        <div>{!! $delFile->name ?? '' !!}</div>
+                        <div>{{ $delFile->name ?? '' }}</div>
                     </div>
                 </x-input.label>
-                <x-button.secondary >{{ __('Cancel') }}</x-button.secondary>
-                <x-button.danger >{{ __('Delete')}}</x-button.danger>
+                <x-button.secondary wire:click="closeDelFile" >{{ __('Cancel') }}</x-button.secondary>
+                <x-button.danger wire:click="destroy" >{{ __('Delete')}}</x-button.danger>
             </div>
         </x-slot>
     </x-modal-wire.dialog>
@@ -140,6 +167,9 @@ $setPerPage = function($value){
     <x-spinner wire:loading wire:target="previousPage" />
     <x-spinner wire:loading wire:target="nextPage" />
     <x-spinner wire:loading wire:target="setPerPage" />
+    <x-spinner wire:loading wire:target="openDelFile" />
+    <x-spinner wire:loading wire:target="closeDelFile" />
+    <x-spinner wire:loading wire:target="destroy" />
 
 
 </div>

@@ -7,6 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class TaskDeleteRun
 {
@@ -32,7 +33,15 @@ class TaskDeleteRun
     {
         $task = $event->task;
         $typeId = $this->getTypeId(self::TYPE);
-        $notes = DB::table('notes')->where('type_id','=',$typeId)->where('item_id','=',$task->id)->delete();
+
+        // удаление заметок
+        DB::table('notes')->where('type_id','=',$typeId)->where('item_id','=',$task->id)->delete();
+
+        // удаление вложений
+        DB::table('files')->where('type_id','=',$typeId)->where('item_id','=',$task->id)->delete();
+        Storage::disk('public')->deleteDirectory('/'.self::TYPE.'/'.$task->id);
+
+        // удаление задачи
         $task->delete(); 
 
     }

@@ -148,7 +148,7 @@ return [
     'unique' => ':attribute уже используется в системе.',
     'uploaded' => 'The :attribute failed to upload.',
     'uppercase' => 'The :attribute field must be uppercase.',
-    'url' => 'The :attribute field must be a valid URL.',
+    'url' => 'Поле :attribute должно быть правильным адресом url.',
     'ulid' => 'The :attribute field must be a valid ULID.',
     'uuid' => 'The :attribute field must be a valid UUID.',
 
@@ -195,6 +195,8 @@ return [
         'contentTask' => __('Task content'),
         'endTask' => __('End'),
         'startTask' => __('Start'),
+        'webName' => __('Web Name'),
+        'webUrl' => __('Web Url')
 
     ],
 

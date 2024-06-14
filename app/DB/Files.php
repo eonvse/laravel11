@@ -73,7 +73,9 @@ class Files
 
     public static function delete($id)
     {
-        File::find($id)->delete();
+        $del=File::find($id);
+        if ($del->isLocal) Storage::disk('public')->delete($del->url);
+        $del->delete();
     }
 
     public static function setFieldValue($id, $field,$value) : void

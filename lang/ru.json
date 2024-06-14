@@ -124,6 +124,10 @@
     "isDone":"Выполнено",
     "dateDone":"Дата выполнения",
     "Task filter":"Показать",
-    "Notes Count":"Заметок"
+    "Notes Count":"Заметок",
+    "Files":"Вложения",
+    "Web Url":"Интернет адрес",
+    "Web Name":"Название",
+    "File delete":"Удалить вложение"
 
 }
