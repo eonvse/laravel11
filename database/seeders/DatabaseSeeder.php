@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             PermissionTaskSeeder::class,
             PermissionNoteSeeder::class,
             TypeSeeder::class,
+            PermissionFileSeeder::class,
         ]);
     }
 }
