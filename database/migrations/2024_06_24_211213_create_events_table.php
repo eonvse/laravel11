@@ -14,13 +14,13 @@ return new class extends Migration
         // Таблица событий
         Schema::create('events', function (Blueprint $table) {
             $table->id();
+            $table->string('title');                    // заголовок/название
             $table->date('day');                        // Дата ДД.ММ.ГГГГ
             $table->time('start')->nullable();          // Время начала H:m
             $table->time('end')->nullable();            // Время завершения H:m
             $table->unsignedBigInteger('type_id');      // Тип привязанной модели - tasks,users,notes etc...
             $table->unsignedBigInteger('item_id');      // id привязанной модели
             $table->unsignedBigInteger('autor_id');     // id автора
-            $table->string('title')->nullable();        // заголовок/название
             $table->text('content')->nullable();        // описание
             $table->timestamps();
         });

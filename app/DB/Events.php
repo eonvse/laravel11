@@ -24,4 +24,9 @@ class Events
 
     }
 
+    public static function create($data)
+    {
+
+    }
+
 }

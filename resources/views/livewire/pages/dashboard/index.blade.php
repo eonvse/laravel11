@@ -16,6 +16,11 @@ use function Livewire\Volt\{state};
                     {{ __('Tasks') }}
                 </x-dropdown-link>
                 @endcan
+                @can('event.view')
+                <x-dropdown-link href="{{ route('events') }}" >
+                    {{ __('Events') }}
+                </x-dropdown-link>
+                @endcan
             </div>
         </div>
         <div class="min-h-32 border-b">

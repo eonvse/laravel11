@@ -33,6 +33,13 @@ $logout = function (Logout $logout) {
                         {{ __('Tasks') }}
                     </x-nav-link>
                     @endcan
+
+                    @can('event.view')
+                    <x-nav-link :href="route('events')" :active="request()->routeIs('events*')" >
+                        {{ __('Events') }}
+                    </x-nav-link>
+                    @endcan
+
                 </div>
             </div>
 
