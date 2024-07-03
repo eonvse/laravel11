@@ -10,8 +10,13 @@ class Event extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['day','start','end','type_id','item_id','autor_id','title','content','status_id'];
+    protected $fillable = ['day','start','end','type_id','item_id','autor_id','title','content'];
     protected $primaryKey = 'id';
+
+    protected $appends =['created','dayF','startF','endF'];
+
+    protected $visible = ['title','dayF','startF','endF','content','created','updated'];    // ??? сразу включить текущий статус и тип.
+                                                                                            // ??? через отношения
 
     //форматированная дата события
     public function getDayFAttribute()
@@ -34,6 +39,27 @@ class Event extends Model
     {
         if(!empty($this->end)) return date('H:i', strtotime($this->end));
         else return '';
+    }
+
+    //форматированное время создания
+    public function getCreatedAttribute()
+    {
+        return date('d.m.Y H:i', strtotime($this->created_at));
+    }
+
+
+    //---------------------------------------------------------
+    //              ОТНОШЕНИЯ
+    //---------------------------------------------------------*/
+
+    public function autor()
+    {
+        return $this->hasOne(User::class,'id','autor_id');
+    }
+
+    public function type()
+    {
+        return $this->hasOne(Type::class,'id','type_id');
     }
 
 

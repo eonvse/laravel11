@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Таблица историй статусов по моделям (без модели. участвует в событии смены статуса по моделям)
+        // Таблица историй статусов по моделям
         Schema::create('log_statuses', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('type_id');  // id типа (модель)
-            $table->unsignedBigInteger('item_id');  // id элемента модели
-            $table->unsignedBigInteger('new_id');   // новый статус на дату создания (id)
-            $table->unsignedBigInteger('old_id');   // старый статус на дату создания (id)
-            $table->unsignedBigInteger('autor_id'); // автор записи (id)
+            $table->unsignedBigInteger('type_id');      // id типа (модель)
+            $table->unsignedBigInteger('item_id');      // id элемента модели
+            $table->unsignedBigInteger('status_id');    // присвоенный статус на дату создания (id)
+            $table->unsignedBigInteger('autor_id');     // автор записи (id)
             $table->timestamps();
         });
     }

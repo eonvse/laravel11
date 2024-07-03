@@ -22,7 +22,6 @@ return new class extends Migration
             $table->unsignedBigInteger('autor_id');     // id автора
             $table->string('title')->nullable();        // заголовок/название
             $table->text('content')->nullable();        // описание
-            $table->unsignedBigInteger('status_id');    // id статуса события (Завершено, Перенесено, В процессе)
             $table->timestamps();
         });
     }

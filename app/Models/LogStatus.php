@@ -12,8 +12,7 @@ class LogStatus extends Model
     protected $fillable = [
         'type_id',  // id типа (модель)
         'item_id',  // id элемента модели
-        'new_id',   // новый статус на дату создания (id)
-        'old_id',   // старый статус на дату создания (id)
+        'status_id',// присвоенный статус на дату создания (id)'
         'autor_id', // автор записи (id)
     ];
     protected $primaryKey = 'id';
