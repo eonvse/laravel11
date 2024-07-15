@@ -196,7 +196,8 @@ return [
         'endTask' => __('End'),
         'startTask' => __('Start'),
         'webName' => __('Web Name'),
-        'webUrl' => __('Web Url')
+        'webUrl' => __('Web Url'),
+        'title' => __('Title')
 
     ],
 

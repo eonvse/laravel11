@@ -4,7 +4,7 @@ use App\DB\Events;
 
 use Livewire\WithoutUrlPagination;
 
-use function Livewire\Volt\{layout, state, title, mount, form, updated,with, usesPagination, uses};
+use function Livewire\Volt\{layout, state, title, mount, updated,with, usesPagination, uses};
 
 layout('layouts.app');
 
@@ -18,7 +18,6 @@ state(['filter'=>null]);
 state([
     'sortField' => 'day',
     'sortDirection' => 'desc',
-    'showCreate' => false,
     'showDelete' =>false,
     'delRecord' => null,
     'taskInfo' => null, //переименовать в eventInfo
@@ -34,20 +33,6 @@ $sortBy = function($field)
                         : 'asc';
 
     $this->sortField = $field;
-};
-
-//открыть левый sidebar формы создания/редактирования
-$openCreate = function()
-{
-    $this->showCreate = true;
-};
-
-//закрыть левый sidebar формы создания/редактирования
-$closeCreate = function()
-{
-    $this->form->reset();
-    $this->form->resetValidation();
-    $this->showCreate = false;
 };
 
 ?>
@@ -77,9 +62,7 @@ $closeCreate = function()
                     <div class="grow relative overflow-x-auto p-1">
                         <div class="flex">
                             @can('event.create')
-                            <div class="p-2 border-r">
-                                <x-button.create wire:click="openCreate">{{ __('Add New Event') }}</x-button.create>
-                            </div>
+                            <livewire:pages.events.create />
                             @endcan
                             <div class="p-2 flex">
                                 <div class="p-1 flex-none">{{ __('Event filter') }}</div>
@@ -148,23 +131,7 @@ $closeCreate = function()
         </div>
     </div>
 
-    <x-sidebar wire:model="showCreate">
-        <div class="w-full p-5 text-center shadow font-semibold text-xl">
-            {{ __('Add New Event') }}
-        </div>
-        <div class="p-10 flex-col space-y-2">
-            <div>
-
-                <form wire:submit="save">
-                </form>
-
-            </div>
-        </div>
-    </x-sidebar>
-
-
     <x-spinner wire:loading wire:target="sortBy" />
-    <x-spinner wire:loading wire:target="openCreate" />
-    <x-spinner wire:loading wire:target="closeCreate" />
+
 
 </div>
