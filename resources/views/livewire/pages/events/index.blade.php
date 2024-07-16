@@ -4,7 +4,7 @@ use App\DB\Events;
 
 use Livewire\WithoutUrlPagination;
 
-use function Livewire\Volt\{layout, state, title, mount, updated,with, usesPagination, uses};
+use function Livewire\Volt\{layout, state, title, mount, updated,with, usesPagination, uses, on};
 
 layout('layouts.app');
 
@@ -24,6 +24,7 @@ state([
     ]);
 
 with(fn () => ['eventsList' => Events::wire_list($this->sortField,$this->sortDirection,$this->filter)->paginate(10)]);
+
 
 //сортировка по полю
 $sortBy = function($field)

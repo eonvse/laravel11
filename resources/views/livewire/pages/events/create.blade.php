@@ -1,14 +1,22 @@
 <?php
+use Carbon\Carbon;
 
 use App\Livewire\Forms\EventForm;
+use App\DB\Items;
 
-use function Livewire\Volt\{state, form,on};
+use function Livewire\Volt\{state,form,on, updated, mount};
 
 form(EventForm::class);
 
 state([
     'showCreate' => false,
 ]);
+
+state(['types','items']);
+
+mount(function() {
+    $this->types = Items::getTypeNames();
+});
 
 on(['edit' => function () {
     $this->closeCreate();
@@ -17,6 +25,27 @@ on(['edit' => function () {
 on(['view' => function () {
     $this->closeCreate();
 }]);
+
+updated(['form.end' => fn () => $this->editEndTime()]);
+updated(['form.type_id' => fn () => $this->setItems() ]);
+
+//если время окончания меньше начала, то устанавливается на +1 час.
+$editEndTime = function() {
+    $st = strtotime($this->form->start);
+    $end = strtotime($this->form->end);
+    if ($end <= $st) {
+        $dateEnd = Carbon::createFromTime(date('H',$st),date('i',$st));
+        $dateEnd->addHour();
+
+        $this->form->end = $dateEnd->format('H:i');
+    }
+
+};
+
+//список элементов выбранного типа
+$setItems = function() {
+    if (!empty($this->form->type_id)) $this->items = Items::getItems($this->form->type_id);
+};
 
 //открыть модальное окно создания события
 $openCreate = function() {
@@ -62,23 +91,33 @@ $delAttr = function ($i) {
                 <form wire:submit="save">
                     <div>
                         <x-input.label value="{{ __('Event title') }}" />
-                        <x-input.text wire:model="form.title" required autofocus />
+                        <x-input.text wire:model="form.title" autofocus />
                         @error('form.title') <x-error>{{ $message }}</x-error> @enderror
                     </div>
                     <div class="mt-2 sm:grid sm:grid-cols-[100px_minmax(0,_1fr)] items-center">
                         <x-input.label>Дата</x-input.label>
-                        <x-input.text type="date" wire:model.blur="form.day" required />
-                        @error('form.day') <x-error>{{ $message }}</x-error> @enderror
+                        <div>
+                            <x-input.text type="date" wire:model.blur="form.day" />
+                            @error('form.day') <x-error>{{ $message }}</x-error> @enderror
+                        </div>
                     </div>
                     <div class="mt-2 sm:grid sm:grid-cols-[100px_minmax(0,_1fr)] items-center">
                         <x-input.label>Начало</x-input.label>
-                        <x-input.text type="time" wire:model.blur="form.start"  />
-                        @error('form.start') <x-error>{{ $message }}</x-error> @enderror
+                        <div>
+                            <x-input.text type="time" wire:model.blur="form.start"  />
+                            @error('form.start') <x-error>{{ $message }}</x-error> @enderror
+                        </div>
                     </div>
                     <div class="mt-2 sm:grid sm:grid-cols-[100px_minmax(0,_1fr)] items-center">
                         <x-input.label>Завершение</x-input.label>
-                        <x-input.text type="time" wire:model.blur="form.end"  />
-                        @error('form.start') <x-error>{{ $message }}</x-error> @enderror
+                        <div>
+                            <x-input.text type="time" wire:model.blur="form.end"  />
+                            @error('form.end') <x-error>{{ $message }}</x-error> @enderror
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <x-input.select-types :items="$types" wire:model.live="form.type_id" />
+                        @error('form.type_id') <x-error>{{ $message }}</x-error> @enderror
                     </div>
                     <div class="flex mt-4">
                         <x-button.create>{{ __('Save') }}</x-button.create>

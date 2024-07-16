@@ -20,13 +20,13 @@ class EventForm extends Form
     #[Validate('nullable')]
     public $start;
 
-    #[Validate('nullable|after:start')]
+    #[Validate('nullable')]
     public $end;
 
-    #[Validate('required|')] // ???? numeric
+    #[Validate('required|numeric')]
     public $type_id;
 
-    #[Validate('required|')] // ???? numeric
+    #[Validate('required|numeric')]
     public $item_id;
 
     #[Validate('nullable|min:10')]
