@@ -16,6 +16,7 @@ state(['types','items']);
 
 mount(function() {
     $this->types = Items::getTypeNames();
+    $this->items = array();
 });
 
 on(['edit' => function () {
@@ -45,6 +46,8 @@ $editEndTime = function() {
 //список элементов выбранного типа
 $setItems = function() {
     if (!empty($this->form->type_id)) $this->items = Items::getItems($this->form->type_id);
+    $this->form->resetValidation('item_id');
+    $this->form->reset('item_id');
 };
 
 //открыть модальное окно создания события
@@ -57,13 +60,16 @@ $closeCreate = function() {
     $this->showCreate = false;
     $this->form->reset();
     $this->form->resetValidation();
+    $this->items = array();
 
 };
 
 //сохранить новое событие
 $save = function () {
+    $name = $this->form->name;
+    $day = $this->form->day;
     $this->form->create();
-    $this->dispatch('event-created');
+    $this->dispatch('event-created', name: $name , day: $day);
     $this->closeCreate();
 };
 
@@ -90,9 +96,9 @@ $delAttr = function ($i) {
             <div>
                 <form wire:submit="save">
                     <div>
-                        <x-input.label value="{{ __('Event title') }}" />
-                        <x-input.text wire:model="form.title" autofocus />
-                        @error('form.title') <x-error>{{ $message }}</x-error> @enderror
+                        <x-input.label value="{{ __('Event name') }}" />
+                        <x-input.text wire:model="form.name" autofocus />
+                        @error('form.name') <x-error>{{ $message }}</x-error> @enderror
                     </div>
                     <div class="mt-2 sm:grid sm:grid-cols-[100px_minmax(0,_1fr)] items-center">
                         <x-input.label>Дата</x-input.label>
@@ -119,6 +125,12 @@ $delAttr = function ($i) {
                         <x-input.select-types :items="$types" wire:model.live="form.type_id" />
                         @error('form.type_id') <x-error>{{ $message }}</x-error> @enderror
                     </div>
+                    
+                    <div class="mt-2">
+                        <x-input.select-items :items="$items" wire:model.live="form.item_id" />
+                        @error('form.item_id') <x-error>{{ $message }}</x-error> @enderror
+                    </div>
+                    
                     <div class="flex mt-4">
                         <x-button.create>{{ __('Save') }}</x-button.create>
                         <x-button.secondary wire:click="closeCreate">{{ __('Cancel') }}</x-button.secondary>

@@ -25,6 +25,11 @@ state([
 
 with(fn () => ['eventsList' => Events::wire_list($this->sortField,$this->sortDirection,$this->filter)->paginate(10)]);
 
+//создано новое событие
+on(['event-created'=>function ($name, $day) {
+    $message = "Событие ".$name." добавлено на ".$day.".";
+    $this->dispatch('banner-message', style:'success', message: $message);
+}]);
 
 //сортировка по полю
 $sortBy = function($field)

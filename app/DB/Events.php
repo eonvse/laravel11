@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 
 use App\Models\Event;
+use App\Events\EventCreate;
 
 //use Illuminate\Support\Facades\Log;
 //Log::debug('filter.status = ' . $filter['status']);
@@ -26,7 +27,8 @@ class Events
 
     public static function create($data)
     {
-
+        $event = Event::create($data);
+        EventCreate::dispatch($event);
     }
 
 }

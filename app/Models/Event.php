@@ -10,12 +10,12 @@ class Event extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['day','start','end','type_id','item_id','autor_id','title','content'];
+    protected $fillable = ['day','start','end','type_id','item_id','autor_id','name','content'];
     protected $primaryKey = 'id';
 
     protected $appends =['created','dayF','startF','endF'];
 
-    protected $visible = ['title','dayF','startF','endF','content','created','updated'];    // ??? сразу включить текущий статус и тип.
+    protected $visible = ['name','dayF','startF','endF','content','created','updated'];    // ??? сразу включить текущий статус и тип.
                                                                                             // ??? через отношения
 
     //форматированная дата события

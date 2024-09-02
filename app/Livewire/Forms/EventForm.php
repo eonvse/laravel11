@@ -12,7 +12,7 @@ use App\DB\Events;
 class EventForm extends Form
 {
     #[Validate('required|min:3')]
-    public $title;
+    public $name;
 
     #[Validate('required|date')]
     public $day;
@@ -39,7 +39,7 @@ class EventForm extends Form
         $this->validate();
 
         $data = [
-            'title' => $this->title,
+            'name' => $this->name,
             'autor_id' => Auth::id(),
             'type_id' => $this->type_id,
             'item_id' => $this->item_id,
