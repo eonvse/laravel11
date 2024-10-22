@@ -66,4 +66,8 @@ use function Livewire\Volt\{state};
         </div>
     </div>
     <div class="mt-3 text-center text-gray-500">Laravel v{{ Illuminate\Foundation\Application::VERSION }} (PHP v{{ PHP_VERSION }})</div>
+    <button 
+  x-data
+  @click="window.scrollTo({top: 0, behavior: 'smooth'})"
+  class="border p-1 rounded">Top</button>
 </div>

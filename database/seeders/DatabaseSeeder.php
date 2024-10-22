@@ -21,8 +21,9 @@ class DatabaseSeeder extends Seeder
             TypeSeeder::class,
             PermissionFileSeeder::class,
             StatusSeeder::class,
-            EventsPermissions::class,
-            EventsTypes::class,
+            //EventsPermissions::class,
+            //EventsTypes::class,
+            TimeDataSetup::class,
         ]);
     }
 }

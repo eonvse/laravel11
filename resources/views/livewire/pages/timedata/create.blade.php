@@ -1,12 +1,12 @@
 <?php
 use Carbon\Carbon;
 
-use App\Livewire\Forms\EventForm;
+use App\Livewire\Forms\TimedataForm;
 use App\DB\Items;
 
 use function Livewire\Volt\{state,form,on, updated, mount};
 
-form(EventForm::class);
+form(TimedataForm::class);
 
 state([
     'showCreate' => false,
@@ -69,7 +69,7 @@ $save = function () {
     $name = $this->form->name;
     $day = $this->form->day;
     $this->form->create();
-    $this->dispatch('event-created', name: $name , day: $day);
+    $this->dispatch('timedata-created', name: $name , day: $day);
     $this->closeCreate();
 };
 
@@ -85,18 +85,18 @@ $delAttr = function ($i) {
 ?>
 <div>
     <div class="p-2 border-r">
-        <x-button.create wire:click="openCreate">{{ __('Add New Event') }}</x-button.create>
+        <x-button.create wire:click="openCreate">{{ __('Add New Timedata') }}</x-button.create>
     </div>
 
     <x-sidebar wire:model="showCreate">
         <div class="w-full p-5 text-center shadow font-semibold text-xl">
-            {{ __('Add New Event') }}
+            {{ __('Add New Timedata') }}
         </div>
         <div class="p-10 flex-col space-y-2">
             <div>
                 <form wire:submit="save">
                     <div>
-                        <x-input.label value="{{ __('Event name') }}" />
+                        <x-input.label value="{{ __('Timedata name') }}" />
                         <x-input.text wire:model="form.name" autofocus />
                         @error('form.name') <x-error>{{ $message }}</x-error> @enderror
                     </div>

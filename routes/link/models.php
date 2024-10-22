@@ -15,6 +15,10 @@ Route::middleware('auth', 'verified')->group(function () {
     ->middleware(['permission:event.view'])
     ->name('events');
 
+    Volt::route('timedata', 'pages.timedata.index')
+    ->middleware(['permission:timedata.view'])
+    ->name('timedata');
+
     Route::get('/tasks/{task}/{editable?}', [\App\Http\Controllers\ModelController::class,'taskEdit'])
     ->middleware(['permission:task.view|task.edit'])
     ->name('tasks.edit');
