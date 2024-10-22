@@ -1,32 +1,60 @@
 # Laravel 11 Breeze CRUD Roles, Users
 
+# Каркас личного кабинета на основе Breeze с админскими CRUD (Роли, пользователи, просмотр логов) - (Spatie Permission)
+
 ## Развертывание:
 ```cmd
-git clone https://github.com/eonvse/timedata2.1.git
+git clone https://github.com/eonvse/laravel11.git
+```
+```cmd
 cd laravel11
-sudo chmod -R 775 storage
-sudo chown -R $USER:www-data storage
+```
 
+```cmd
+sudo chmod -R 775 storage
+```
+
+```cmd
+sudo chown -R $USER:www-data storage
+```
+
+```cmd
 alias sail='[ -f sail ] && sh sail || sh vendor/bin/sail'
 sail up
 sail shell
-
+```
+```cmd
 composer install
 npm run build
-
+```
+```cmd
 cp .env.examlple .env
-###Настройка БД###
-
+```
+```cmd
 php artisan key:generate
+```
 
+### Настройка БД
+
+
+```cmd
 php artisan migrate
+```
 
-#php artisan db:seed#
+```cmd
+php artisan db:seed
+```
+
+```cmd
 php artisan db:seed --class=PermissionSeeder
-##После регистрации на сайте первым пользователем можно запустить миграцию SuperAdmin##
-php artisan db:seed --class=SuperAdminSeeder
+```
 
+## После регистрации на сайте первым пользователем можно запустить миграцию SuperAdmin
+```cmd
+php artisan db:seed --class=SuperAdminSeeder
 ```   	
+# Источники
+
 * [Laravel 11](https://laravel.com/docs/11.x)
     * [Laravel Sail (Docker)](https://laravel.com/docs/11.x/sail#main-content)
     * [Laravel Breeze](https://laravel.com/docs/11.x/starter-kits#breeze-and-livewire)
@@ -52,14 +80,17 @@ php artisan db:seed --class=SuperAdminSeeder
 > * 'Notes' => 'bg-orange-100 text-black'
 
 
-### Сопровождение
+## Сопровождение
 
 * Re-authenticate with GitHub. 
-```
+```cmd
 gh auth login
 ```
-* git config core.filemode false 
 
+* git - Отключить измениние разрешений файлов
+```cmd
+git config core.filemode false 
+```
 
 ### Авторские права:
 * Фреймворки
